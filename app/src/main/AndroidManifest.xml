@@ -19,7 +19,16 @@
         <activity
             android:name=".TermsListActivity"
             android:label="@string/title_activity_terms_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".CourseListActivity"
+            android:label="@string/title_activity_course_list"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity"/>
+        <activity
+            android:name=".AssessmentListActivity"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>
