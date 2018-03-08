@@ -9,4 +9,5 @@
     <string name="end_date">End Date:</string>
     <string name="title">Title</string>
     <string name="title_activity_new_term">NewTermActivity</string>
+    <string name="select_date">Tap to select a date</string>
 </resources>

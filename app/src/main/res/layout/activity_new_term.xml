@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context="com.example.v_jarj.wgu.NewTermActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:tint="@android:color/white"
+        app:srcCompat="@android:drawable/ic_menu_save" />
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,6 +29,8 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_new_term" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_new_term" />
 
 </android.support.design.widget.CoordinatorLayout>
