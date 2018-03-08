@@ -11,4 +11,6 @@
     <string name="title_activity_new_term">NewTermActivity</string>
     <string name="select_date">Tap to select a date</string>
     <string name="date_selector_button">Select Date</string>
+    <string name="title_activity_term_info">TermInfoActivity</string>
+    <string name="date_format">MM/DD/YYYY</string>
 </resources>

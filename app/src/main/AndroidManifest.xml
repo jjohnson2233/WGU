@@ -38,6 +38,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.v_jarj.wgu.TermsListActivity" />
         </activity>
+        <activity
+            android:name=".TermInfoActivity"
+            android:label="@string/title_activity_term_info"
+            android:parentActivityName=".TermsListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.TermsListActivity" />
+        </activity>
     </application>
 
 </manifest>
