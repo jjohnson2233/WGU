@@ -23,7 +23,8 @@ public class TermsListActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(TermsListActivity.this, NewTermActivity.class));
+                Intent intent = new Intent(TermsListActivity.this, NewTermActivity.class);
+                startActivity(intent);
             }
         });
     }

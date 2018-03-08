@@ -29,7 +29,11 @@
         <activity
             android:name=".AssessmentListActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".NewTermActivity"></activity>
+        <activity
+            android:name=".NewTermActivity"
+            android:label="NewTermActivity"
+            android:parentActivityName=".TermsListActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
