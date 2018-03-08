@@ -31,9 +31,13 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".NewTermActivity"
-            android:label="NewTermActivity"
+            android:label="@string/title_activity_new_term"
             android:parentActivityName=".TermsListActivity"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.TermsListActivity" />
+        </activity>
     </application>
 
 </manifest>
