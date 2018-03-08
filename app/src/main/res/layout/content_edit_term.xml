@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.v_jarj.wgu.NewTermActivity"
-    tools:showIn="@layout/activity_new_term">
+    tools:context="com.example.v_jarj.wgu.EditTermActivity"
+    tools:showIn="@layout/activity_edit_term">
 
     <EditText
         android:id="@+id/title"
@@ -118,6 +118,5 @@
         android:onClick="openEndDatePicker"
         app:layout_constraintBaseline_toBaselineOf="@+id/endDate"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
 </android.support.constraint.ConstraintLayout>

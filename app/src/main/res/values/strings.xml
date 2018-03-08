@@ -13,4 +13,5 @@
     <string name="date_selector_button">Select Date</string>
     <string name="title_activity_term_info">TermInfoActivity</string>
     <string name="date_format">MM/DD/YYYY</string>
+    <string name="title_activity_edit_term">EditTermActivity</string>
 </resources>
