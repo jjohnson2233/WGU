@@ -28,4 +28,10 @@ public class EditTermActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public void openStartDatePicker(View view) {
+    }
+
+    public void openEndDatePicker(View view) {
+    }
+
 }
