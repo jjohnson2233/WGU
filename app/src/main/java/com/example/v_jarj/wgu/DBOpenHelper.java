@@ -11,65 +11,81 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     //Constants for identifying tables and columns
+    //Terms table
     public static final String TABLE_TERMS = "terms";
-    public static final String TITLE = "title";
-    public static final String ID = "_id";
-    public static final String START = "startDate";
-    public static final String END = "endDate";
-    public static final String COURSE_ID = "course_ID";
-    public static final String TABLE_COURSES = "courses";
-    public static final String COURSE_STATUS = "status";
-    public static final String MENTOR_ID = "mentorID";
-    public static final String ASSESSMENT_ID = "assessmentID";
-    public static final String TABLE_ASSESSMENTS = "assessments";
-    public static final String ASSESSMENTS_DUE = "dueDate";
-    public static final String ASSESSMENTS_TYPE = "type";
-    public static final String ASSESSMENTS_ALERT = "alert";
-    public static final String TABLE_MENTORS = "mentors";
-    public static final String MENTORS_NAME = "name";
-    public static final String MENTORS_PHONE = "phone";
-    public static final String MENTORS_EMAIL = "email";
+    public static final String TERM_ID = "_id";
+    public static final String TERM_TITLE = "title";
+    public static final String TERM_START = "startDate";
+    public static final String TERM_END = "endDate";
+    public static final String[] TERMS_ALL_COLUMNS = 
+            {TERM_ID, TERM_TITLE, TERM_START, TERM_END};
 
+    //Mentors Table
+    public static final String TABLE_MENTORS = "mentors";
+    public static final String MENTOR_ID = "mentorID";
+    public static final String MENTOR_NAME = "name";
+    public static final String MENTOR_PHONE = "phone";
+    public static final String MENTOR_EMAIL = "email";
+    public static final String[] MENTORS_ALL_COLUMNS =
+            {MENTOR_ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL};
+    
+    //Courses Table
+    public static final String TABLE_COURSES = "courses";
+    public static final String COURSE_ID = "course_ID";
+    public static final String COURSE_STATUS = "status";
+    public static final String[] COURSES_ALL_COLUMNS = 
+            {COURSE_ID, COURSE_STATUS, MENTOR_ID, TERM_ID};
+
+    //Assessments Table
+    public static final String TABLE_ASSESSMENTS = "assessments";
+    public static final String ASSESSMENT_ID = "assessmentID";
+    public static final String ASSESSMENT_TITLE = "title";
+    public static final String ASSESSMENT_DUE = "dueDate";
+    public static final String ASSESSMENT_TYPE = "type";
+    public static final String ASSESSMENT_ALERT = "alert";
+    public static final String[] ASSESSMENTS_ALL_COLUMNS = 
+            {ASSESSMENT_ID, ASSESSMENT_TITLE, ASSESSMENT_DUE, ASSESSMENT_TYPE, ASSESSMENT_ALERT, COURSE_ID};
+
+
+    private static final String TABLE_CREATE_TERMS =
+            "CREATE TABLE " + TABLE_TERMS + " (" +
+                    TERM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TERM_TITLE + " TEXT, " +
+                    TERM_START + " TEXT, " +
+                    TERM_END + " TEXT," +
+                    ")";
 
     //SQL to create tables
     private static final String TABLE_CREATE_MENTORS =
             "CREATE TABLE " + TABLE_MENTORS + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    MENTORS_NAME + " TEXT, " +
-                    MENTORS_PHONE + " TEXT, " +
-                    MENTORS_EMAIL + " TEXT" +
-                    ")";
-
-    private static final String TABLE_CREATE_ASSESSMENTS =
-            "CREATE TABLE " + TABLE_ASSESSMENTS + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TITLE + " TEXT, " +
-                    ASSESSMENTS_DUE + " TEXT, " +
-                    ASSESSMENTS_TYPE + " TEXT" +
-                    ASSESSMENTS_ALERT + " TEXT" +
+                    TERM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    MENTOR_NAME + " TEXT, " +
+                    MENTOR_PHONE + " TEXT, " +
+                    MENTOR_EMAIL + " TEXT" +
                     ")";
 
     private static final String TABLE_CREATE_COURSES =
             "CREATE TABLE " + TABLE_COURSES + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TITLE + " TEXT, " +
-                    START + " TEXT, " +
-                    END + " TEXT" +
-                    COURSE_STATUS + " TEXT" +
+                    TERM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TERM_TITLE + " TEXT, " +
+                    TERM_START + " TEXT, " +
+                    TERM_END + " TEXT " +
+                    COURSE_STATUS + " TEXT " +
                     MENTOR_ID + " INTEGER, " +
-                    ASSESSMENT_ID + " INTEGER, " +
-                    "FOREIGN KEY(" + MENTOR_ID + ") REFERENCES " + TABLE_MENTORS + "(" + ID + ")" +
-                    "FOREIGN KEY(" + ASSESSMENT_ID + ") REFERENCES " + TABLE_ASSESSMENTS + "(" + ID + ")" +
+                    TERM_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + MENTOR_ID + ") REFERENCES " + TABLE_MENTORS + "(" + MENTOR_ID + ") " +
+                    "FOREIGN KEY(" + TERM_ID + ") REFERENCES " + TABLE_TERMS + "(" + TERM_ID + ")" +
                     ")";
 
-    private static final String TABLE_CREATE_TERMS =
-            "CREATE TABLE " + TABLE_TERMS + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TITLE + " TEXT, " +
-                    START + " TEXT, " +
-                    END + " TEXT, " +
-                    COURSE_ID + " INTEGER, " +
-                    "FOREIGN KEY(" + COURSE_ID + ") REFERENCES " + TABLE_COURSES + "(" + ID + ")" +
+    private static final String TABLE_CREATE_ASSESSMENTS =
+            "CREATE TABLE " + TABLE_ASSESSMENTS + " (" +
+                    TERM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    TERM_TITLE + " TEXT, " +
+                    ASSESSMENT_DUE + " TEXT, " +
+                    ASSESSMENT_TYPE + " TEXT " +
+                    ASSESSMENT_ALERT + " TEXT " +
+                    COURSE_ID + " TEXT " +
+                    "FOREIGN KEY(" + TERM_ID + ") REFERENCES " + TABLE_TERMS + "(" + TERM_ID + ")" +
                     ")";
 
     public DBOpenHelper(Context context) {
