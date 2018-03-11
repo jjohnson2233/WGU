@@ -20,7 +20,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String TERM_START = "startDate";
     public static final String TERM_END = "endDate";
     public static final String[] TERMS_ALL_COLUMNS = 
-            {TERM_ID, TERM_TITLE, TERM_START, TERM_END};
+            {ID, TERM_TITLE, TERM_START, TERM_END};
 
     //Mentors Table
     public static final String TABLE_MENTORS = "mentors";
@@ -29,14 +29,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String MENTOR_PHONE = "phone";
     public static final String MENTOR_EMAIL = "email";
     public static final String[] MENTORS_ALL_COLUMNS =
-            {MENTOR_ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL};
+            {ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL};
     
     //Courses Table
     public static final String TABLE_COURSES = "courses";
     public static final String COURSE_ID = "course_ID";
     public static final String COURSE_STATUS = "status";
     public static final String[] COURSES_ALL_COLUMNS = 
-            {COURSE_ID, COURSE_STATUS, MENTOR_ID, TERM_ID};
+            {ID, COURSE_STATUS, MENTOR_ID, TERM_ID};
 
     //Assessments Table
     public static final String TABLE_ASSESSMENTS = "assessments";
@@ -46,7 +46,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String ASSESSMENT_TYPE = "type";
     public static final String ASSESSMENT_ALERT = "alert";
     public static final String[] ASSESSMENTS_ALL_COLUMNS = 
-            {ASSESSMENT_ID, ASSESSMENT_TITLE, ASSESSMENT_DUE, ASSESSMENT_TYPE, ASSESSMENT_ALERT, COURSE_ID};
+            {ID, ASSESSMENT_TITLE, ASSESSMENT_DUE, ASSESSMENT_TYPE, ASSESSMENT_ALERT, COURSE_ID};
 
 
     private static final String TABLE_CREATE_TERMS =

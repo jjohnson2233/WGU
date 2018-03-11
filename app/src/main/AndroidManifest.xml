@@ -65,6 +65,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.v_jarj.wgu.CourseListActivity" />
         </activity>
+        <provider
+            android:authorities="com.example.v_jarj.wgu.dataprovider"
+            android:name=".DataProvider"
+            android:exported="false" />
     </application>
 
 </manifest>
