@@ -17,4 +17,5 @@
     <string name="title_activity_new_course">NewCourseActivity</string>
     <string name="new_term">New Term</string>
     <string name="term_updated">Term updated</string>
+    <string name="action_delete">Delete</string>
 </resources>
