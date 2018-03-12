@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -19,6 +20,7 @@ import android.widget.SimpleCursorAdapter;
 public class TermsListActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<Cursor>
 {
+    private static final int EDITOR_REQUEST_CODE = 1001;
     private CursorAdapter cursorAdapter;
 
     @Override
@@ -38,6 +40,16 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         ListView list = findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
 
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(TermsListActivity.this, TermEditorActivity.class);
+                Uri uri = Uri.parse(DataProvider.TERMS_URI + "/" + id);
+                intent.putExtra("Term", uri);
+                startActivityForResult(intent, EDITOR_REQUEST_CODE);
+            }
+        });
+
         getLoaderManager().initLoader(0, null, this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -45,19 +57,14 @@ implements LoaderManager.LoaderCallbacks<Cursor>
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(TermsListActivity.this, TermEditorActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
         });
 
     }
 
-    private void createTerm(String termTitle) {
-        ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.TERM_TITLE, termTitle);
-        values.put(DBOpenHelper.TERM_START, "blah");
-        values.put(DBOpenHelper.TERM_END, "blah");
-        Uri termUri = getContentResolver().insert(DataProvider.TERMS_URI,
-                values);
+    private void restartLoader() {
+        getLoaderManager().restartLoader(0, null, this);
     }
 
     @Override
@@ -74,5 +81,12 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
+            restartLoader();
+        }
     }
 }

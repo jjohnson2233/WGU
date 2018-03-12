@@ -9,10 +9,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-/**
- * Created by jaredjohnson on 3/11/18.
- */
-
 public class DataProvider extends ContentProvider {
     //Authority
     private static final String AUTHORITY = "com.example.v_jarj.wgu.dataprovider";
@@ -72,9 +68,14 @@ public class DataProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
+
+        if (uriMatcher.match(uri) == TERMS_ID) {
+            s = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
+        }
+
         return database.query(DBOpenHelper.TABLE_TERMS, DBOpenHelper.TERMS_ALL_COLUMNS,
                 s, null, null, null,
-                DBOpenHelper.TERM_TITLE + " DESC");
+                DBOpenHelper.TERM_TITLE + " ASC");
     }
 
     @Nullable
