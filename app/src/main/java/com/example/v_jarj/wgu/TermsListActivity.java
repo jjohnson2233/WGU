@@ -44,7 +44,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TermsListActivity.this, NewTermActivity.class);
+                Intent intent = new Intent(TermsListActivity.this, TermEditorActivity.class);
                 startActivity(intent);
             }
         });

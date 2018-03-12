@@ -30,7 +30,7 @@
             android:name=".AssessmentListActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".NewTermActivity"
+            android:name=".TermEditorActivity"
             android:label="@string/title_activity_new_term"
             android:parentActivityName=".TermsListActivity"
             android:theme="@style/AppTheme.NoActionBar">

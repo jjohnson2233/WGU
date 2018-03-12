@@ -15,4 +15,5 @@
     <string name="date_format">MM/DD/YYYY</string>
     <string name="title_activity_edit_term">EditTermActivity</string>
     <string name="title_activity_new_course">NewCourseActivity</string>
+    <string name="new_term">New Term</string>
 </resources>
