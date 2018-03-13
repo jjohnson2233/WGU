@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -87,6 +88,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             restartLoader();
+            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.term_updated, Snackbar.LENGTH_SHORT).show();
         }
     }
 }

@@ -118,7 +118,6 @@ public class TermEditorActivity extends AppCompatActivity {
         }
         //Update value in the database
         getContentResolver().update(DataProvider.TERMS_URI, values, termFilter, null);
-        Toast.makeText(this, R.string.term_updated, Toast.LENGTH_LONG).show();
         setResult(RESULT_OK);
     }
 
