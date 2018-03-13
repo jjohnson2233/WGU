@@ -88,7 +88,10 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             restartLoader();
-            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.term_updated, Snackbar.LENGTH_SHORT).show();
+        } else if (requestCode == EDITOR_REQUEST_CODE && resultCode == TermEditorActivity.RESULT_DELETED) {
+            restartLoader();
+            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.term_deleted,
+                    Snackbar.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.v_jarj.wgu;
 
+import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,12 +11,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class TermEditorActivity extends AppCompatActivity {
 
+    public static final int RESULT_DELETED = 2;
     private String action;
     private EditText title;
     private EditText startDate;
@@ -72,7 +76,39 @@ public class TermEditorActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (action.equals(Intent.ACTION_EDIT)) {
+            getMenuInflater().inflate(R.menu.menu_term_editor, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finishEditing();
+                break;
+            case R.id.action_delete:
+                deleteTerm();
+                break;
+        }
+        return true;
+    }
+
+    private void deleteTerm() {
+        getContentResolver().delete(DataProvider.TERMS_URI,
+                termFilter, null);
+        setResult(RESULT_DELETED);
+        finish();
+    }
+
     public void openStartDatePicker(View view) {
+        DialogFragment fragment = new DatePickerFragment();
+        fragment.show(getFragmentManager(), "datePicker");
     }
 
     public void openEndDatePicker(View view) {

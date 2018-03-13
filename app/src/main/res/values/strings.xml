@@ -18,4 +18,5 @@
     <string name="new_term">New Term</string>
     <string name="term_updated">Term updated</string>
     <string name="action_delete">Delete</string>
+    <string name="term_deleted">Term deleted</string>
 </resources>
