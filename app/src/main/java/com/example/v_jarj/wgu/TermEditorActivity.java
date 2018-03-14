@@ -55,15 +55,14 @@ public class TermEditorActivity extends AppCompatActivity {
             setTitle(getString(R.string.new_term));
         } else {
             action = Intent.ACTION_EDIT;
+            setTitle(getString(R.string.edit_term));
             termFilter = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
 
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
             cursor.moveToFirst();
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_TITLE));
-            //cursor.moveToFirst();
             oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_START));
-            //cursor.moveToFirst();
             oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_END));
             title.setText(oldTitle);
             startDate.setText(oldStart);

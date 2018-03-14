@@ -22,6 +22,7 @@ public class TermsListActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private static final int EDITOR_REQUEST_CODE = 1001;
+    private static final int INFO_REQUEST_CODE = 1002;
     private CursorAdapter cursorAdapter;
 
     @Override
@@ -44,10 +45,10 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TermsListActivity.this, TermEditorActivity.class);
+                Intent intent = new Intent(TermsListActivity.this, TermInfoActivity.class);
                 Uri uri = Uri.parse(DataProvider.TERMS_URI + "/" + id);
                 intent.putExtra("Term", uri);
-                startActivityForResult(intent, EDITOR_REQUEST_CODE);
+                startActivity(intent);
             }
         });
 
@@ -88,10 +89,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             restartLoader();
-        } else if (requestCode == EDITOR_REQUEST_CODE && resultCode == TermEditorActivity.RESULT_DELETED) {
-            restartLoader();
-            Snackbar.make(findViewById(R.id.coordinatorLayout), R.string.term_deleted,
-                    Snackbar.LENGTH_SHORT).show();
         }
     }
 }

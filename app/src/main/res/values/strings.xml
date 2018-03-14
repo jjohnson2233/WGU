@@ -19,4 +19,6 @@
     <string name="term_updated">Term updated</string>
     <string name="action_delete">Delete</string>
     <string name="term_deleted">Term deleted</string>
+    <string name="edit_term">Edit Term</string>
+    <string name="term_info">Term Info</string>
 </resources>
