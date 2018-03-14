@@ -17,6 +17,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -110,7 +111,11 @@ public class TermEditorActivity extends AppCompatActivity {
         finish();
     }
 
-    public void openStartDatePicker(View view) {
+    //Format for start and end date strings
+    final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+
+    public void openStartDatePicker(View view) throws ParseException {
+        startDate = findViewById(R.id.startDate);
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -118,9 +123,7 @@ public class TermEditorActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
                 String date = format.format(calendar.getTime());
-                startDate = findViewById(R.id.startDate);
                 startDate.setText(date);
             }
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
@@ -128,6 +131,7 @@ public class TermEditorActivity extends AppCompatActivity {
     }
 
     public void openEndDatePicker(View view) {
+        endDate = findViewById(R.id.endDate);
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -135,7 +139,6 @@ public class TermEditorActivity extends AppCompatActivity {
                 calendar.set(Calendar.YEAR, year);
                 calendar.set(Calendar.MONTH, month);
                 calendar.set(Calendar.DAY_OF_MONTH, day);
-                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
                 String date = format.format(calendar.getTime());
                 endDate = findViewById(R.id.endDate);
                 endDate.setText(date);
@@ -193,6 +196,6 @@ public class TermEditorActivity extends AppCompatActivity {
             values.put(DBOpenHelper.TERM_START, termStart);
             values.put(DBOpenHelper.TERM_END, termEnd);
             getContentResolver().insert(DataProvider.TERMS_URI, values);
-            setResult(RESULT_OK);
+            setResult(RESULT_OK);/**/
     }
 }
