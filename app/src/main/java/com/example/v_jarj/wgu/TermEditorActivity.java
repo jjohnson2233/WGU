@@ -1,5 +1,6 @@
 package com.example.v_jarj.wgu;
 
+import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -12,7 +13,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 public class TermEditorActivity extends AppCompatActivity {
 
@@ -25,6 +31,7 @@ public class TermEditorActivity extends AppCompatActivity {
     private String oldTitle;
     private String oldStart;
     private String oldEnd;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +111,37 @@ public class TermEditorActivity extends AppCompatActivity {
     }
 
     public void openStartDatePicker(View view) {
-        DialogFragment fragment = new DatePickerFragment();
-        fragment.show(getFragmentManager(), "datePicker");
+        calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                String date = format.format(calendar.getTime());
+                startDate = findViewById(R.id.startDate);
+                startDate.setText(date);
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 
     public void openEndDatePicker(View view) {
+        calendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, day);
+                SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                String date = format.format(calendar.getTime());
+                endDate = findViewById(R.id.endDate);
+                endDate.setText(date);
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
     }
 
     private void finishEditing() {
