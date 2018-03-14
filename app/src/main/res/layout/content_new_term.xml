@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.v_jarj.wgu.TermEditorActivity"
-    tools:showIn="@layout/activity_new_term">
+    tools:showIn="@layout/activity_term_editor">
 
     <EditText
         android:id="@+id/title"

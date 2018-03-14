@@ -22,14 +22,6 @@
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".CourseListActivity"
-            android:label="@string/title_activity_course_list"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".AssessmentListActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".TermEditorActivity"
             android:label="@string/title_activity_new_term"
             android:parentActivityName=".TermsListActivity"
@@ -47,24 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.v_jarj.wgu.TermsListActivity" />
         </activity>
-        <activity
-            android:name=".EditTermActivity"
-            android:label="@string/title_activity_edit_term"
-            android:parentActivityName=".TermInfoActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.v_jarj.wgu.TermInfoActivity" />
-        </activity>
-        <activity
-            android:name=".NewCourseActivity"
-            android:label="@string/title_activity_new_course"
-            android:parentActivityName=".CourseListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.v_jarj.wgu.CourseListActivity" />
-        </activity>
+
         <provider
             android:authorities="com.example.v_jarj.wgu.dataprovider"
             android:name=".DataProvider"

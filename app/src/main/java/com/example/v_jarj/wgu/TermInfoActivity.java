@@ -22,8 +22,6 @@ public class TermInfoActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TermInfoActivity.this, EditTermActivity.class);
-                startActivity(intent);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
