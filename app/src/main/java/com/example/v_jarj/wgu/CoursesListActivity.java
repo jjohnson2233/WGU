@@ -16,25 +16,23 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-public class TermsListActivity extends AppCompatActivity
-implements LoaderManager.LoaderCallbacks<Cursor>
-{
+public class CoursesListActivity extends AppCompatActivity
+implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int EDITOR_REQUEST_CODE = 1001;
     private CursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_terms_list);
+        setContentView(R.layout.activity_courses_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("Terms");
+        setTitle(getString(R.string.courses));
 
-        String[] from = {DBOpenHelper.TERM_TITLE};
+        String[] from = {DBOpenHelper.COURSE_TITLE};
         int[] to = {android.R.id.text1};
         cursorAdapter = new SimpleCursorAdapter(this,
-              android.R.layout.simple_list_item_1, null, from, to, 0);
+                android.R.layout.simple_list_item_1, null, from, to, 0);
 
         ListView list = findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
@@ -42,8 +40,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(TermsListActivity.this, TermInfoActivity.class);
-                Uri uri = Uri.parse(DataProvider.TERMS_URI + "/" + id);
+                Intent intent = new Intent(CoursesListActivity.this, TermInfoActivity.class);
+                Uri uri = Uri.parse(DataProvider.COURSES_URI + "/" + id);
                 intent.putExtra("Term", uri);
                 startActivity(intent);
             }
@@ -55,7 +53,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TermsListActivity.this, TermEditorActivity.class);
+                Intent intent = new Intent(CoursesListActivity.this, TermEditorActivity.class);
                 startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
         });
@@ -68,7 +66,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this, DataProvider.TERMS_URI,
+        return new CursorLoader(this, DataProvider.COURSES_URI,
                 null, null, null, null);
     }
 

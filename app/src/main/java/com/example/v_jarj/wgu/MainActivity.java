@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openCoursesList(View view) {
+        Intent intent = new Intent(this, CoursesListActivity.class);
+        startActivity(intent);
     }
 
     public void openAssessmentsList(View view) {

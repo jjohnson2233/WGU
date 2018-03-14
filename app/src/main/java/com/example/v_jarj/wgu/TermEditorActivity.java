@@ -1,7 +1,7 @@
 package com.example.v_jarj.wgu;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -90,8 +89,6 @@ public class TermEditorActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
         switch (item.getItemId()) {
             case android.R.id.home:
                 finishEditing();

@@ -34,13 +34,15 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     //Courses Table
     public static final String TABLE_COURSES = "courses";
     public static final String COURSE_ID = "course_ID";
+    public static final String COURSE_TITLE = "title";
+    public static final String COURSE_START = "startDate";
+    public static final String COURSE_END = "endDate";
     public static final String COURSE_STATUS = "status";
     public static final String[] COURSES_ALL_COLUMNS = 
-            {ID, COURSE_STATUS, MENTOR_ID, TERM_ID};
+            {ID, COURSE_TITLE, COURSE_START, COURSE_END, COURSE_STATUS, MENTOR_ID, TERM_ID};
 
     //Assessments Table
     public static final String TABLE_ASSESSMENTS = "assessments";
-    public static final String ASSESSMENT_ID = "assessmentID";
     public static final String ASSESSMENT_TITLE = "title";
     public static final String ASSESSMENT_DUE = "dueDate";
     public static final String ASSESSMENT_TYPE = "type";
@@ -69,9 +71,9 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_CREATE_COURSES =
             "CREATE TABLE " + TABLE_COURSES + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TERM_TITLE + " TEXT, " +
-                    TERM_START + " TEXT, " +
-                    TERM_END + " TEXT, " +
+                    COURSE_TITLE + " TEXT, " +
+                    COURSE_START + " TEXT, " +
+                    COURSE_END + " TEXT, " +
                     COURSE_STATUS + " TEXT, " +
                     MENTOR_ID + " INTEGER, " +
                     TERM_ID + " INTEGER, " +
@@ -82,7 +84,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     private static final String TABLE_CREATE_ASSESSMENTS =
             "CREATE TABLE " + TABLE_ASSESSMENTS + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    TERM_TITLE + " TEXT, " +
+                    ASSESSMENT_TITLE + " TEXT, " +
                     ASSESSMENT_DUE + " TEXT, " +
                     ASSESSMENT_TYPE + " TEXT, " +
                     ASSESSMENT_ALERT + " TEXT, " +

@@ -65,17 +65,28 @@ public class DataProvider extends ContentProvider {
         return true;
     }
 
-    @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-
-        if (uriMatcher.match(uri) == TERMS_ID) {
-            s = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
+    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
+        switch (uriMatcher.match(uri)) {
+            case TERMS:
+                return database.query(DBOpenHelper.TABLE_TERMS, DBOpenHelper.TERMS_ALL_COLUMNS,
+                        s, null, null, null,
+                        DBOpenHelper.TERM_TITLE + " ASC");
+            case COURSES:
+                return database.query(DBOpenHelper.TABLE_COURSES, DBOpenHelper.COURSES_ALL_COLUMNS,
+                        s, null, null, null,
+                        DBOpenHelper.COURSE_TITLE + " ASC");
+            case MENTORS:
+                return database.query(DBOpenHelper.TABLE_MENTORS, DBOpenHelper.MENTORS_ALL_COLUMNS,
+                        s, null, null, null,
+                        DBOpenHelper.MENTOR_NAME + " ASC");
+            case ASSESSMENTS:
+                return database.query(DBOpenHelper.TABLE_ASSESSMENTS, DBOpenHelper.ASSESSMENTS_ALL_COLUMNS,
+                        s, null, null, null,
+                        DBOpenHelper.ASSESSMENT_TITLE + " ASC");
+            default:
+                throw new IllegalArgumentException("Invalid Uri");
         }
-
-        return database.query(DBOpenHelper.TABLE_TERMS, DBOpenHelper.TERMS_ALL_COLUMNS,
-                s, null, null, null,
-                DBOpenHelper.TERM_TITLE + " ASC");
     }
 
     @Nullable
@@ -87,18 +98,58 @@ public class DataProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        long id = database.insert(DBOpenHelper.TABLE_TERMS,
-                null, contentValues);
-        return Uri.parse(TERMS_PATH + "/" + id);
+        long id;
+        switch (uriMatcher.match(uri)) {
+            case TERMS:
+                id = database.insert(DBOpenHelper.TABLE_TERMS,
+                        null, contentValues);
+                return Uri.parse(TERMS_PATH + "/" + id);
+            case COURSES:
+                id = database.insert(DBOpenHelper.TABLE_COURSES,
+                        null, contentValues);
+                return Uri.parse(COURSES_PATH + "/" + id);
+            case MENTORS:
+                id = database.insert(DBOpenHelper.TABLE_MENTORS,
+                        null, contentValues);
+                return Uri.parse(MENTORS_PATH + "/" + id);
+            case ASSESSMENTS:
+                id = database.insert(DBOpenHelper.TABLE_ASSESSMENTS,
+                        null, contentValues);
+                return Uri.parse(ASSESSMENTS_PATH + "/" + id);
+            default:
+                throw new IllegalArgumentException("Invalid Uri");
+        }
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return database.delete(DBOpenHelper.TABLE_TERMS, s, strings);
+        switch (uriMatcher.match(uri)) {
+            case TERMS:
+                return database.delete(DBOpenHelper.TABLE_TERMS, s, strings);
+            case COURSES:
+                return database.delete(DBOpenHelper.TABLE_COURSES, s, strings);
+            case MENTORS:
+                return database.delete(DBOpenHelper.TABLE_MENTORS, s, strings);
+            case ASSESSMENTS:
+                return database.delete(DBOpenHelper.TABLE_ASSESSMENTS, s, strings);
+            default:
+                throw new IllegalArgumentException("Invalid Uri");
+        }
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
-        return database.update(DBOpenHelper.TABLE_TERMS, contentValues, s, strings);
+        switch (uriMatcher.match(uri)) {
+            case TERMS:
+                return database.update(DBOpenHelper.TABLE_TERMS, contentValues, s, strings);
+            case COURSES:
+                return database.update(DBOpenHelper.TABLE_COURSES, contentValues, s, strings);
+            case MENTORS:
+                return database.update(DBOpenHelper.TABLE_MENTORS, contentValues, s, strings);
+            case ASSESSMENTS:
+                return database.update(DBOpenHelper.TABLE_ASSESSMENTS, contentValues, s, strings);
+            default:
+                throw new IllegalArgumentException("Invalid Uri");
+        }
     }
 }
