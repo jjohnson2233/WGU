@@ -9,18 +9,12 @@
     <string name="end_date">End Date:</string>
     <string name="title">Title</string>
     <string name="title_activity_new_term">NewTermActivity</string>
-    <string name="select_date">Tap to select a date</string>
-    <string name="date_selector_button">Select Date</string>
     <string name="title_activity_term_info">TermInfoActivity</string>
-    <string name="date_format">MM/DD/YYYY</string>
-    <string name="title_activity_edit_term">EditTermActivity</string>
-    <string name="title_activity_new_course">NewCourseActivity</string>
     <string name="new_term">New Term</string>
-    <string name="term_updated">Term updated</string>
     <string name="action_delete">Delete</string>
-    <string name="term_deleted">Term deleted</string>
     <string name="edit_term">Edit Term</string>
     <string name="term_info">Term Info</string>
     <string name="title_activity_courses_list">CoursesListActivity</string>
     <string name="title_activity_course_editor">CourseEditorActivity</string>
+    <string name="date_format">MM/DD/YYYY</string>
 </resources>

@@ -45,7 +45,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
                 Intent intent = new Intent(TermsListActivity.this, TermInfoActivity.class);
                 Uri uri = Uri.parse(DataProvider.TERMS_URI + "/" + id);
                 intent.putExtra("Term", uri);
-                startActivity(intent);
+                startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
         });
 

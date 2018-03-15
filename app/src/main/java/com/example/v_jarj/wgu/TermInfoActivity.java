@@ -88,6 +88,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             populateFields();
             restartLoader();
+        } else if (requestCode == EDITOR_REQUEST_CODE && resultCode == TermEditorActivity.RESULT_DELETED) {
+            setResult(TermEditorActivity.RESULT_OK);
+            finish();
         }
     }
 

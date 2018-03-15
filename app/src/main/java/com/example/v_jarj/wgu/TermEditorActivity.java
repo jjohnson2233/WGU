@@ -19,6 +19,7 @@ import android.widget.EditText;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class TermEditorActivity extends AppCompatActivity {
 
@@ -108,7 +109,7 @@ public class TermEditorActivity extends AppCompatActivity {
     }
 
     //Format for start and end date strings
-    final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+    final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
     public void openStartDatePicker(View view) throws ParseException {
         startDate = findViewById(R.id.startDate);

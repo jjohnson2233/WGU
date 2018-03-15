@@ -67,20 +67,21 @@ public class DataProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
+        int match = uriMatcher.match(uri);
         switch (uriMatcher.match(uri)) {
-            case TERMS:
+            case TERMS:case TERMS_ID:
                 return database.query(DBOpenHelper.TABLE_TERMS, DBOpenHelper.TERMS_ALL_COLUMNS,
                         s, null, null, null,
                         DBOpenHelper.TERM_TITLE + " ASC");
-            case COURSES:
+            case COURSES:case COURSES_ID:
                 return database.query(DBOpenHelper.TABLE_COURSES, DBOpenHelper.COURSES_ALL_COLUMNS,
                         s, null, null, null,
                         DBOpenHelper.COURSE_TITLE + " ASC");
-            case MENTORS:
+            case MENTORS:case MENTORS_ID:
                 return database.query(DBOpenHelper.TABLE_MENTORS, DBOpenHelper.MENTORS_ALL_COLUMNS,
                         s, null, null, null,
                         DBOpenHelper.MENTOR_NAME + " ASC");
-            case ASSESSMENTS:
+            case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.query(DBOpenHelper.TABLE_ASSESSMENTS, DBOpenHelper.ASSESSMENTS_ALL_COLUMNS,
                         s, null, null, null,
                         DBOpenHelper.ASSESSMENT_TITLE + " ASC");
