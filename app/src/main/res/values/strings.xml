@@ -22,4 +22,5 @@
     <string name="edit_term">Edit Term</string>
     <string name="term_info">Term Info</string>
     <string name="title_activity_courses_list">CoursesListActivity</string>
+    <string name="title_activity_course_editor">CourseEditorActivity</string>
 </resources>

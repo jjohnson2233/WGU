@@ -28,6 +28,8 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.courses));
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String[] from = {DBOpenHelper.COURSE_TITLE};
         int[] to = {android.R.id.text1};
@@ -42,7 +44,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(CoursesListActivity.this, TermInfoActivity.class);
                 Uri uri = Uri.parse(DataProvider.COURSES_URI + "/" + id);
-                intent.putExtra("Term", uri);
+                intent.putExtra("Course", uri);
                 startActivity(intent);
             }
         });
@@ -53,7 +55,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CoursesListActivity.this, TermEditorActivity.class);
+                Intent intent = new Intent(CoursesListActivity.this, CourseEditorActivity.class);
                 startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
         });
