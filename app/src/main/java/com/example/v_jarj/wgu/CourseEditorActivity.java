@@ -38,7 +38,8 @@ public class CourseEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setResult(RESULT_CANCELED);
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);
         endDate = findViewById(R.id.endDate);
@@ -88,8 +89,8 @@ public class CourseEditorActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finishEditing();
+            case R.id.home:
+                finish();
                 break;
             case R.id.action_delete:
                 deleteCourse();

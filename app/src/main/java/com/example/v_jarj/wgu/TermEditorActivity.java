@@ -41,6 +41,7 @@ public class TermEditorActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setResult(RESULT_CANCELED);
 
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);
@@ -92,7 +93,7 @@ public class TermEditorActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finishEditing();
+                finish();
                 break;
             case R.id.action_delete:
                 deleteTerm();
