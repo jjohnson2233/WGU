@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
@@ -31,6 +33,7 @@ public class CourseInfoActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.course_info);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String[] from = {DBOpenHelper.ASSESSMENT_TITLE};
         int[] to = {android.R.id.text1};
@@ -62,27 +65,6 @@ public class CourseInfoActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void populateFields() {
-        Intent intent = getIntent();
-        Uri uri = intent.getParcelableExtra("Course");
-        String courseFilter = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
-
-        Cursor cursor = getContentResolver().query(uri,
-                DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
-        cursor.moveToFirst();
-        String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
-        String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
-        String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
-        title.setText(oldTitle);
-        startDate.setText(oldStart);
-        endDate.setText(oldEnd);
-        cursor.close();
-    }
-
-    private void restartLoader() {
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
@@ -108,5 +90,36 @@ public class CourseInfoActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         cursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void populateFields() {
+        Intent intent = getIntent();
+        Uri uri = intent.getParcelableExtra("Course");
+        String courseFilter = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
+
+        Cursor cursor = getContentResolver().query(uri,
+                DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
+        cursor.moveToFirst();
+        String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
+        String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
+        String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
+        title.setText(oldTitle);
+        startDate.setText(oldStart);
+        endDate.setText(oldEnd);
+        cursor.close();
+    }
+
+    private void restartLoader() {
+        getLoaderManager().restartLoader(0, null, this);
     }
 }

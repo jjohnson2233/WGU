@@ -62,10 +62,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
     }
 
-    private void restartLoader() {
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
         return new CursorLoader(this, DataProvider.COURSES_URI,
@@ -85,5 +81,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             restartLoader();
+    }
+
+    private void restartLoader() {
+        getLoaderManager().restartLoader(0, null, this);
     }
 }
