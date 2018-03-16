@@ -65,6 +65,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.v_jarj.wgu.CoursesListActivity" />
         </activity>
+        <activity
+            android:name=".CourseInfoActivity"
+            android:label="@string/title_activity_course_info"
+            android:parentActivityName=".CoursesListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.CoursesListActivity" />
+        </activity>
     </application>
 
 </manifest>

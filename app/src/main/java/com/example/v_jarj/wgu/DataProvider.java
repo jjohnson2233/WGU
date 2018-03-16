@@ -101,19 +101,19 @@ public class DataProvider extends ContentProvider {
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
         long id;
         switch (uriMatcher.match(uri)) {
-            case TERMS:
+            case TERMS:case TERMS_ID:
                 id = database.insert(DBOpenHelper.TABLE_TERMS,
                         null, contentValues);
                 return Uri.parse(TERMS_PATH + "/" + id);
-            case COURSES:
+            case COURSES:case COURSES_ID:
                 id = database.insert(DBOpenHelper.TABLE_COURSES,
                         null, contentValues);
                 return Uri.parse(COURSES_PATH + "/" + id);
-            case MENTORS:
+            case MENTORS:case MENTORS_ID:
                 id = database.insert(DBOpenHelper.TABLE_MENTORS,
                         null, contentValues);
                 return Uri.parse(MENTORS_PATH + "/" + id);
-            case ASSESSMENTS:
+            case ASSESSMENTS:case ASSESSMENTS_ID:
                 id = database.insert(DBOpenHelper.TABLE_ASSESSMENTS,
                         null, contentValues);
                 return Uri.parse(ASSESSMENTS_PATH + "/" + id);
@@ -125,13 +125,13 @@ public class DataProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
         switch (uriMatcher.match(uri)) {
-            case TERMS:
+            case TERMS:case TERMS_ID:
                 return database.delete(DBOpenHelper.TABLE_TERMS, s, strings);
-            case COURSES:
+            case COURSES:case COURSES_ID:
                 return database.delete(DBOpenHelper.TABLE_COURSES, s, strings);
-            case MENTORS:
+            case MENTORS:case MENTORS_ID:
                 return database.delete(DBOpenHelper.TABLE_MENTORS, s, strings);
-            case ASSESSMENTS:
+            case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.delete(DBOpenHelper.TABLE_ASSESSMENTS, s, strings);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
@@ -141,13 +141,13 @@ public class DataProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
         switch (uriMatcher.match(uri)) {
-            case TERMS:
+            case TERMS:case TERMS_ID:
                 return database.update(DBOpenHelper.TABLE_TERMS, contentValues, s, strings);
-            case COURSES:
+            case COURSES:case COURSES_ID:
                 return database.update(DBOpenHelper.TABLE_COURSES, contentValues, s, strings);
-            case MENTORS:
+            case MENTORS:case MENTORS_ID:
                 return database.update(DBOpenHelper.TABLE_MENTORS, contentValues, s, strings);
-            case ASSESSMENTS:
+            case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.update(DBOpenHelper.TABLE_ASSESSMENTS, contentValues, s, strings);
             default:
                 throw new IllegalArgumentException("Invalid Uri");

@@ -17,4 +17,8 @@
     <string name="title_activity_courses_list">CoursesListActivity</string>
     <string name="title_activity_course_editor">CourseEditorActivity</string>
     <string name="date_format">MM/DD/YYYY</string>
+    <string name="title_activity_course_info">CourseInfoActivity</string>
+    <string name="course_info">Course Info</string>
+    <string name="new_course">New Course</string>
+    <string name="edit_course">Edit Course</string>
 </resources>

@@ -42,7 +42,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(CoursesListActivity.this, TermInfoActivity.class);
+                Intent intent = new Intent(CoursesListActivity.this, CourseInfoActivity.class);
                 Uri uri = Uri.parse(DataProvider.COURSES_URI + "/" + id);
                 intent.putExtra("Course", uri);
                 startActivity(intent);
@@ -84,8 +84,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             restartLoader();
-        }
     }
 }

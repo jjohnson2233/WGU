@@ -16,8 +16,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class TermInfoActivity extends AppCompatActivity
-implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CourseInfoActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int EDITOR_REQUEST_CODE = 1001;
     private TextView title;
     private TextView startDate;
@@ -27,12 +27,12 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_term_info);
+        setContentView(R.layout.activity_course_info);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.term_info);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.course_info);
 
-        String[] from = {DBOpenHelper.COURSE_TITLE};
+        String[] from = {DBOpenHelper.ASSESSMENT_TITLE};
         int[] to = {android.R.id.text1};
         cursorAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_1, null, from, to, 0);
@@ -52,9 +52,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(TermInfoActivity.this, TermEditorActivity.class);
-                Uri uri = getIntent().getParcelableExtra("Term");
-                intent.putExtra("Term", uri);
+                Intent intent = new Intent(CourseInfoActivity.this, CourseEditorActivity.class);
+                Uri uri = getIntent().getParcelableExtra("Course");
+                intent.putExtra("Course", uri);
                 startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
 
@@ -64,15 +64,15 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private void populateFields() {
         Intent intent = getIntent();
-        Uri uri = intent.getParcelableExtra("Term");
-        String termFilter = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
+        Uri uri = intent.getParcelableExtra("Course");
+        String courseFilter = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
 
         Cursor cursor = getContentResolver().query(uri,
-                DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
+                DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
         cursor.moveToFirst();
-        String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_TITLE));
-        String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_START));
-        String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_END));
+        String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
+        String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
+        String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
         title.setText(oldTitle);
         startDate.setText(oldStart);
         endDate.setText(oldEnd);
@@ -88,7 +88,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             populateFields();
             restartLoader();
-        } else if (requestCode == EDITOR_REQUEST_CODE && resultCode == TermEditorActivity.RESULT_DELETED) {
+        } else if (requestCode == EDITOR_REQUEST_CODE && resultCode == CourseEditorActivity.RESULT_DELETED) {
             setResult(RESULT_OK);
             finish();
         }

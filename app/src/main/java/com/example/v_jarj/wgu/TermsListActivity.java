@@ -17,8 +17,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 public class TermsListActivity extends AppCompatActivity
-implements LoaderManager.LoaderCallbacks<Cursor>
-{
+implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int EDITOR_REQUEST_CODE = 1001;
     private CursorAdapter cursorAdapter;
 
@@ -84,8 +83,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
             restartLoader();
-        }
     }
 }
