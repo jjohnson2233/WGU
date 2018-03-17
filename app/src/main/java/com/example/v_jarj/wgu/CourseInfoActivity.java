@@ -92,16 +92,6 @@ public class CourseInfoActivity extends AppCompatActivity
         cursorAdapter.swapCursor(null);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void populateFields() {
         Intent intent = getIntent();
         Uri uri = intent.getParcelableExtra("Course");

@@ -79,8 +79,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            restartLoader();
+    protected void onResume() {
+        super.onResume();
+        restartLoader();
     }
 
     private void restartLoader() {
