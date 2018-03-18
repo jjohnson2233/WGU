@@ -7,6 +7,7 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,6 +68,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         Uri uri = intent.getParcelableExtra("Term");
         String termFilter = DBOpenHelper.ID + "=" + uri.getLastPathSegment();
 
+        //Populate the Term info
         Cursor cursor = getContentResolver().query(uri,
                 DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
         cursor.moveToFirst();
@@ -96,13 +98,15 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri uri = getIntent().getParcelableExtra("Term");
+        String courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
         return new CursorLoader(this, DataProvider.COURSES_URI,
-                null, null, null, null);
+                null, courseFilter, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(null);
+        cursorAdapter.swapCursor(data);
     }
 
     @Override

@@ -2,8 +2,12 @@ package com.example.v_jarj.wgu;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,15 +17,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
-public class TermEditorActivity extends AppCompatActivity {
+public class TermEditorActivity extends AppCompatActivity
+implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int RESULT_DELETED = 2;
     private String action;
@@ -29,10 +38,14 @@ public class TermEditorActivity extends AppCompatActivity {
     private EditText startDate;
     private EditText endDate;
     private String termFilter;
+    private String courseFilter;
     private String oldTitle;
     private String oldStart;
     private String oldEnd;
     private Calendar calendar;
+    private CursorAdapter cursorAdapter;
+    private Uri uri;
+    private String[] courses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +60,21 @@ public class TermEditorActivity extends AppCompatActivity {
         startDate = findViewById(R.id.startDate);
         endDate = findViewById(R.id.endDate);
 
+        String[] from = {DBOpenHelper.COURSE_TITLE};
+        int[] to = {android.R.id.text1};
+        cursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_multiple_choice, null, from, to, 0);
+
+        ListView list = findViewById(R.id.courseList);
+        list.setAdapter(cursorAdapter);
+        list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        list.setItemsCanFocus(false);
+
+        getLoaderManager().initLoader(0, null, this);
+
         Intent intent = getIntent();
 
-        Uri uri = intent.getParcelableExtra("Term");
+        uri = intent.getParcelableExtra("Term");
 
         if (uri == null) {
             action = Intent.ACTION_INSERT;
@@ -69,7 +94,6 @@ public class TermEditorActivity extends AppCompatActivity {
             startDate.setText(oldStart);
             endDate.setText(oldEnd);
             cursor.close();
-            title.requestFocus();
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -100,6 +124,22 @@ public class TermEditorActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this, DataProvider.COURSES_URI,
+                null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
     }
 
     private void deleteTerm() {
@@ -161,30 +201,23 @@ public class TermEditorActivity extends AppCompatActivity {
                 }
                 break;
             case Intent.ACTION_EDIT:
-                if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd)) {
-                    setResult(RESULT_CANCELED);
-                } else {
                     updateTerm(newTitle, newStart, newEnd);
-                }
         }
         finish();
     }
 
     //Update and existing term
     private void updateTerm(String termTitle, String termStart, String termEnd) {
-        ContentValues values = new ContentValues();
-        //Performs checks to see if changes were actually made
-        if (!oldTitle.equals(termTitle)) {
-            values.put(DBOpenHelper.TERM_TITLE, termTitle);
-        }
-        if (!oldStart.equals(termStart)) {
-            values.put(DBOpenHelper.TERM_START, termStart);
-        }
-        if (!oldEnd.equals(termEnd)) {
-            values.put(DBOpenHelper.TERM_END, termEnd);
-        }
+        ContentValues termValues = new ContentValues();
+        ContentValues courseValues = new ContentValues();
+        //Get the values for the term
+        termValues.put(DBOpenHelper.TERM_TITLE, termTitle);
+        termValues.put(DBOpenHelper.TERM_START, termStart);
+        termValues.put(DBOpenHelper.TERM_END, termEnd);
+        //Get the values for the courses
+        courseValues.put(DBOpenHelper.TERM_ID, uri.getLastPathSegment());
         //Update value in the database
-        getContentResolver().update(DataProvider.TERMS_URI, values, termFilter, null);
+        getContentResolver().update(DataProvider.TERMS_URI, termValues, termFilter, null);
         setResult(RESULT_OK);
     }
 
