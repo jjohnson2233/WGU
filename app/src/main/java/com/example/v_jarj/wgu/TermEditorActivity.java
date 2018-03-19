@@ -14,9 +14,11 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -45,7 +47,8 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     private Calendar calendar;
     private CursorAdapter cursorAdapter;
     private Uri uri;
-    private String[] courses;
+    private long[] courses;
+    ListView list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        setResult(RESULT_CANCELED);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);
@@ -65,7 +68,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         cursorAdapter = new SimpleCursorAdapter(this,
                 android.R.layout.simple_list_item_multiple_choice, null, from, to, 0);
 
-        ListView list = findViewById(R.id.courseList);
+        list = findViewById(R.id.courseList);
         list.setAdapter(cursorAdapter);
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setItemsCanFocus(false);
@@ -94,6 +97,16 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             startDate.setText(oldStart);
             endDate.setText(oldEnd);
             cursor.close();
+
+            courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
+            cursor = getContentResolver().query(DataProvider.COURSES_URI,
+                    DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
+            cursor.moveToFirst();
+            /*for (int i = 0; i < cursor.getCount(); i++) {
+                int id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
+                list.setItemChecked(id, true);
+                cursor.moveToNext();
+            }*/
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -135,6 +148,26 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
+        courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
+        Cursor checkedCursor = getContentResolver().query(DataProvider.COURSES_URI,
+                DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
+        Cursor uncheckedCursor = cursorAdapter.getCursor();
+        checkedCursor.moveToFirst();
+        uncheckedCursor.moveToFirst();
+        while (!checkedCursor.isAfterLast()) {
+            int i = 0;
+            while (!uncheckedCursor.isAfterLast()) {
+                if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
+                        == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
+                    list.setItemChecked(i, true);
+                }
+                i++;
+                uncheckedCursor.moveToNext();
+            }
+            uncheckedCursor.moveToFirst();
+            checkedCursor.moveToNext();
+        }
+
     }
 
     @Override
@@ -189,6 +222,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
         String newEnd = endDate.getText().toString().trim();
+        courses = list.getCheckedItemIds();
 
         switch (action) {
             case Intent.ACTION_INSERT:
@@ -197,36 +231,46 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                     //TODO create a pop up for when fields are empty
                     setResult(RESULT_CANCELED);
                 } else {
-                    createTerm(newTitle, newStart, newEnd);
+                    createTerm(newTitle, newStart, newEnd, courses);
                 }
                 break;
             case Intent.ACTION_EDIT:
-                    updateTerm(newTitle, newStart, newEnd);
+                    updateTerm(newTitle, newStart, newEnd, courses);
         }
         finish();
     }
 
     //Update and existing term
-    private void updateTerm(String termTitle, String termStart, String termEnd) {
+    private void updateTerm(String termTitle, String termStart, String termEnd, long[] termCourses) {
         ContentValues termValues = new ContentValues();
         ContentValues courseValues = new ContentValues();
+        ContentValues emptyValues = new ContentValues();
         //Get the values for the term
         termValues.put(DBOpenHelper.TERM_TITLE, termTitle);
         termValues.put(DBOpenHelper.TERM_START, termStart);
         termValues.put(DBOpenHelper.TERM_END, termEnd);
         //Get the values for the courses
         courseValues.put(DBOpenHelper.TERM_ID, uri.getLastPathSegment());
+        emptyValues.putNull(DBOpenHelper.TERM_ID);
         //Update value in the database
         getContentResolver().update(DataProvider.TERMS_URI, termValues, termFilter, null);
+        //Clear the term values for the courses
+        getContentResolver().update(DataProvider.COURSES_URI, emptyValues, null, null);
+        for (long id : termCourses) {
+            courseFilter = DBOpenHelper.ID + "=" + id;
+            getContentResolver().update(DataProvider.COURSES_URI, courseValues, courseFilter, null);
+        }
         setResult(RESULT_OK);
     }
 
-    private void createTerm(String termTitle, String termStart, String termEnd) {
-            ContentValues values = new ContentValues();
-            values.put(DBOpenHelper.TERM_TITLE, termTitle);
-            values.put(DBOpenHelper.TERM_START, termStart);
-            values.put(DBOpenHelper.TERM_END, termEnd);
-            getContentResolver().insert(DataProvider.TERMS_URI, values);
-            setResult(RESULT_OK);/**/
+    private void createTerm(String termTitle, String termStart, String termEnd, long[] courses) {
+            ContentValues termValues = new ContentValues();
+            ContentValues courseValues = new ContentValues();
+            termValues.put(DBOpenHelper.TERM_TITLE, termTitle);
+            termValues.put(DBOpenHelper.TERM_START, termStart);
+            termValues.put(DBOpenHelper.TERM_END, termEnd);
+            courseValues.put(DBOpenHelper.TERM_ID, uri.getLastPathSegment());
+            getContentResolver().insert(DataProvider.TERMS_URI, termValues);
+            setResult(RESULT_OK);
     }
 }
