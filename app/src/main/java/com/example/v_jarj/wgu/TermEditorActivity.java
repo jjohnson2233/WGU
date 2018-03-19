@@ -70,6 +70,8 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setItemsCanFocus(false);
 
+        Cursor cursor = cursorAdapter.getCursor();
+
         getLoaderManager().initLoader(0, null, this);
 
         Intent intent = getIntent();
