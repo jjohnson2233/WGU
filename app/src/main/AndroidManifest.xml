@@ -14,6 +14,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -72,6 +73,33 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.v_jarj.wgu.CourseEditorActivity" />
+        </activity>
+        <activity
+            android:name=".AssessmentsListActivity"
+            android:label="@string/title_activity_assessments_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.MainActivity" />
+        </activity>
+        <activity
+            android:name=".AssessmentInfoActivity"
+            android:label="@string/title_activity_assessment_info"
+            android:parentActivityName=".AssessmentsListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.AssessmentsListActivity" />
+        </activity>
+        <activity
+            android:name=".AssessmentEditorActivity"
+            android:label="@string/title_activity_assessment_editor"
+            android:parentActivityName=".AssessmentInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.AssessmentInfoActivity" />
         </activity>
     </application>
 
