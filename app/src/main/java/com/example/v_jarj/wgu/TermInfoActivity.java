@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -40,6 +41,16 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
         ListView list = findViewById(android.R.id.list);
         list.setAdapter(cursorAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(TermInfoActivity.this, CourseInfoActivity.class);
+                Uri uri = Uri.parse(DataProvider.COURSES_URI + "/" + id);
+                intent.putExtra("Course", uri);
+                startActivity(intent);
+            }
+        });
 
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);

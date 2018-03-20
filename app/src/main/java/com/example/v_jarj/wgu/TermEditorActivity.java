@@ -73,8 +73,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         list.setItemsCanFocus(false);
 
-        Cursor cursor = cursorAdapter.getCursor();
-
         getLoaderManager().initLoader(0, null, this);
 
         Intent intent = getIntent();
@@ -104,11 +102,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             cursor = getContentResolver().query(DataProvider.COURSES_URI,
                     DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
             cursor.moveToFirst();
-            /*for (int i = 0; i < cursor.getCount(); i++) {
-                int id = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
-                list.setItemChecked(id, true);
-                cursor.moveToNext();
-            }*/
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
