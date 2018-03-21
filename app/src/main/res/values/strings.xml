@@ -1,4 +1,9 @@
 <resources>
+    <string-array name="status_array">
+        <item>Not Started</item>
+        <item>In-progress</item>
+        <item>Completed</item>
+    </string-array>
     <string name="app_name">WGU</string>
     <string name="title_activity_terms_list">TermsListActivity</string>
     <string name="terms">Terms</string>

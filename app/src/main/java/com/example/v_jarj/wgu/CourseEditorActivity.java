@@ -7,15 +7,16 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,11 +29,14 @@ public class CourseEditorActivity extends AppCompatActivity {
     private EditText title;
     private EditText startDate;
     private EditText endDate;
+    private Spinner statusSpinner;
     private String courseFilter;
     private String oldTitle;
     private String oldStart;
     private String oldEnd;
+    private String oldStatus;
     private Calendar calendar;
+    private SimpleDateFormat format;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,13 @@ public class CourseEditorActivity extends AppCompatActivity {
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);
         endDate = findViewById(R.id.endDate);
+        format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+
+        statusSpinner = findViewById(R.id.status_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.status_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(adapter);
 
         Intent intent = getIntent();
 
@@ -65,11 +76,22 @@ public class CourseEditorActivity extends AppCompatActivity {
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
             oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
             oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
+            oldStatus = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_STATUS));
             title.setText(oldTitle);
             startDate.setText(oldStart);
             endDate.setText(oldEnd);
+            switch (oldStatus) {
+                case "In-progress":
+                    statusSpinner.setSelection(0);
+                    break;
+                case "Not Started":
+                    statusSpinner.setSelection(1);
+                    break;
+                case "Completed":
+                    statusSpinner.setSelection(2);
+                    break;
+            }
             cursor.close();
-            title.requestFocus();
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -110,9 +132,6 @@ public class CourseEditorActivity extends AppCompatActivity {
         finish();
     }
 
-    //Format for start and end date strings
-    final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-
     public void openStartDatePicker(View view) throws ParseException {
         startDate = findViewById(R.id.startDate);
         calendar = Calendar.getInstance();
@@ -150,6 +169,7 @@ public class CourseEditorActivity extends AppCompatActivity {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
         String newEnd = endDate.getText().toString().trim();
+        String newStatus = (String) statusSpinner.getSelectedItem();
 
         switch (action) {
             case Intent.ACTION_INSERT:
@@ -158,21 +178,20 @@ public class CourseEditorActivity extends AppCompatActivity {
                     //TODO create a pop up for when fields are empty
                     setResult(RESULT_CANCELED);
                 } else {
-                    createCourse(newTitle, newStart, newEnd);
+                    createCourse(newTitle, newStart, newEnd, newStatus);
                 }
                 break;
             case Intent.ACTION_EDIT:
                 if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd)) {
                     setResult(RESULT_CANCELED);
                 } else {
-                    updateCourse(newTitle, newStart, newEnd);
+                    updateCourse(newTitle, newStart, newEnd, newStatus);
                 }
         }
         finish();
     }
 
-    //Update and existing course
-    private void updateCourse(String courseTitle, String courseStart, String courseEnd) {
+    private void updateCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus) {
         ContentValues values = new ContentValues();
         //Performs checks to see if changes were actually made
         if (!oldTitle.equals(courseTitle)) {
@@ -184,16 +203,20 @@ public class CourseEditorActivity extends AppCompatActivity {
         if (!oldEnd.equals(courseEnd)) {
             values.put(DBOpenHelper.COURSE_END, courseEnd);
         }
+        if (!oldStatus.equals(courseStatus)) {
+            values.put(DBOpenHelper.COURSE_STATUS, courseStatus);
+        }
         //Update value in the database
         getContentResolver().update(DataProvider.COURSES_URI, values, courseFilter, null);
         setResult(RESULT_OK);
     }
 
-    private void createCourse(String courseTitle, String courseStart, String courseEnd) {
+    private void createCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus) {
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.COURSE_TITLE, courseTitle);
         values.put(DBOpenHelper.COURSE_START, courseStart);
         values.put(DBOpenHelper.COURSE_END, courseEnd);
+        values.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         getContentResolver().insert(DataProvider.COURSES_URI, values);
         setResult(RESULT_OK);
     }

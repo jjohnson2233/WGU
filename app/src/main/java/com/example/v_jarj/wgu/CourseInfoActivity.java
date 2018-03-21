@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CourseInfoActivity extends AppCompatActivity
@@ -22,8 +23,9 @@ public class CourseInfoActivity extends AppCompatActivity
     private TextView title;
     private TextView startDate;
     private TextView endDate;
+    private TextView status;
     private CursorAdapter mentorCursorAdapter;
-    private SimpleCursorAdapter assessmentCursorAdapter;
+    private CursorAdapter assessmentCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +52,12 @@ public class CourseInfoActivity extends AppCompatActivity
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);
         endDate = findViewById(R.id.endDate);
+        status = findViewById(R.id.status);
 
         populateFields();
 
         getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -82,18 +86,36 @@ public class CourseInfoActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, DataProvider.MENTORS_URI,
-                null, null, null, null);
+        CursorLoader loader = null;
+        switch (id) {
+            case 0:
+                loader = new CursorLoader(this, DataProvider.MENTORS_URI,
+                        null, null, null, null);
+                break;
+            case 1:
+                loader = new CursorLoader(this, DataProvider.ASSESSMENTS_URI,
+                        null, null, null, null);
+                break;
+        }
+        return loader;
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mentorCursorAdapter.swapCursor(data);
+        switch (loader.getId()) {
+            case 0:
+                mentorCursorAdapter.swapCursor(data);
+                break;
+            case 1:
+                assessmentCursorAdapter.swapCursor(data);
+                break;
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mentorCursorAdapter.swapCursor(null);
+        assessmentCursorAdapter.swapCursor(null);
     }
 
     private void populateFields() {
@@ -107,9 +129,11 @@ public class CourseInfoActivity extends AppCompatActivity
         String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
         String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
         String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
+        String oldStatus = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_STATUS));
         title.setText(oldTitle);
         startDate.setText(oldStart);
         endDate.setText(oldEnd);
+        status.setText(oldStatus);
         cursor.close();
     }
 

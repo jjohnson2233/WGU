@@ -140,26 +140,27 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
-        courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
-        Cursor checkedCursor = getContentResolver().query(DataProvider.COURSES_URI,
-                DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
-        Cursor uncheckedCursor = cursorAdapter.getCursor();
-        checkedCursor.moveToFirst();
-        uncheckedCursor.moveToFirst();
-        while (!checkedCursor.isAfterLast()) {
-            int i = 0;
-            while (!uncheckedCursor.isAfterLast()) {
-                if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
-                        == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
-                    list.setItemChecked(i, true);
-                }
-                i++;
-                uncheckedCursor.moveToNext();
-            }
+        if (action == Intent.ACTION_EDIT) {
+            courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
+            Cursor checkedCursor = getContentResolver().query(DataProvider.COURSES_URI,
+                    DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
+            Cursor uncheckedCursor = cursorAdapter.getCursor();
+            checkedCursor.moveToFirst();
             uncheckedCursor.moveToFirst();
-            checkedCursor.moveToNext();
+            while (!checkedCursor.isAfterLast()) {
+                int i = 0;
+                while (!uncheckedCursor.isAfterLast()) {
+                    if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
+                            == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
+                        list.setItemChecked(i, true);
+                    }
+                    i++;
+                    uncheckedCursor.moveToNext();
+                }
+                uncheckedCursor.moveToFirst();
+                checkedCursor.moveToNext();
+            }
         }
-
     }
 
     @Override
@@ -235,7 +236,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                     //TODO create a pop up for when fields are empty
                     setResult(RESULT_CANCELED);
                 } else {
-                    createTerm(newTitle, newStart, newEnd);
+                    createTerm(newTitle, newStart, newEnd, courses);
                 }
                 break;
             case Intent.ACTION_EDIT:
@@ -266,14 +267,23 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         setResult(RESULT_OK);
     }
 
-    private void createTerm(String termTitle, String termStart, String termEnd) {
-            ContentValues termValues = new ContentValues();
-            ContentValues courseValues = new ContentValues();
-            termValues.put(DBOpenHelper.TERM_TITLE, termTitle);
-            termValues.put(DBOpenHelper.TERM_START, termStart);
-            termValues.put(DBOpenHelper.TERM_END, termEnd);
-            courseValues.put(DBOpenHelper.TERM_ID, uri.getLastPathSegment());
-            getContentResolver().insert(DataProvider.TERMS_URI, termValues);
-            setResult(RESULT_OK);
+    private void createTerm(String termTitle, String termStart, String termEnd, long[] termCourses) {
+        ContentValues termValues = new ContentValues();
+        ContentValues courseValues = new ContentValues();
+        termValues.put(DBOpenHelper.TERM_TITLE, termTitle);
+        termValues.put(DBOpenHelper.TERM_START, termStart);
+        termValues.put(DBOpenHelper.TERM_END, termEnd);
+        getContentResolver().insert(DataProvider.TERMS_URI, termValues);
+        termFilter = DBOpenHelper.TERM_TITLE + "=\"" + termTitle + "\"";
+        Cursor cursor = getContentResolver().query(DataProvider.TERMS_URI,
+                DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
+        cursor.moveToFirst();
+        int termID = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
+        courseValues.put(DBOpenHelper.TERM_ID, termID);
+        for (long id : termCourses) {
+            courseFilter = DBOpenHelper.ID + "=" + id;
+            getContentResolver().update(DataProvider.COURSES_URI, courseValues, courseFilter, null);
+        }
+        setResult(RESULT_OK);
     }
 }
