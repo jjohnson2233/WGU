@@ -218,11 +218,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         datePickerDialog.show();
     }
 
-    public void openNewCourseActivity(View view) {
-        Intent intent = new Intent(this, CourseEditorActivity.class);
-        startActivity(intent);
-    }
-
     private void finishEditing() {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
