@@ -79,8 +79,8 @@
         android:layout_marginStart="8dp"
         android:text="@string/status_placeholder"
         android:textAppearance="@android:style/TextAppearance.Material.Subhead"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        tools:layout_editor_absoluteY="105dp" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView8"
@@ -102,11 +102,12 @@
         android:text="@string/assessments"
         android:textAppearance="@android:style/TextAppearance.Material.Title"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        app:layout_constraintTop_toBottomOf="@+id/mentorsList" />
 
     <ListView
+        android:id="@+id/assessmentsList"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -117,7 +118,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/mentorsList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

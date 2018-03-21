@@ -8,10 +8,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
@@ -24,7 +22,8 @@ public class CourseInfoActivity extends AppCompatActivity
     private TextView title;
     private TextView startDate;
     private TextView endDate;
-    private CursorAdapter cursorAdapter;
+    private CursorAdapter mentorCursorAdapter;
+    private SimpleCursorAdapter assessmentCursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,13 +34,18 @@ public class CourseInfoActivity extends AppCompatActivity
         getSupportActionBar().setTitle(R.string.course_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String[] from = {DBOpenHelper.ASSESSMENT_TITLE};
+        String[] mentorFrom = {DBOpenHelper.MENTOR_NAME};
+        String[] assessmentFrom = {DBOpenHelper.ASSESSMENT_TITLE};
         int[] to = {android.R.id.text1};
-        cursorAdapter = new SimpleCursorAdapter(this,
-                android.R.layout.simple_list_item_1, null, from, to, 0);
+        mentorCursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1, null, mentorFrom, to, 0);
+        assessmentCursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1, null, assessmentFrom, to, 0);
 
-        ListView list = findViewById(android.R.id.list);
-        list.setAdapter(cursorAdapter);
+        ListView mentorList = findViewById(R.id.mentorsList);
+        ListView assessmentList = findViewById(R.id.assessmentsList);
+        mentorList.setAdapter(mentorCursorAdapter);
+        assessmentList.setAdapter(assessmentCursorAdapter);
 
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.startDate);
@@ -78,18 +82,18 @@ public class CourseInfoActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, DataProvider.COURSES_URI,
+        return new CursorLoader(this, DataProvider.MENTORS_URI,
                 null, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(null);
+        mentorCursorAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+        mentorCursorAdapter.swapCursor(null);
     }
 
     private void populateFields() {

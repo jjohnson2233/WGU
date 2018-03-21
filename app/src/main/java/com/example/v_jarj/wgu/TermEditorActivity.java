@@ -1,10 +1,8 @@
 package com.example.v_jarj.wgu;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -14,7 +12,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +25,6 @@ import android.widget.SimpleCursorAdapter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 public class TermEditorActivity extends AppCompatActivity
@@ -49,6 +45,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     private Uri uri;
     private long[] courses;
     ListView list;
+    private final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,15 +167,22 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         cursorAdapter.swapCursor(null);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        restartLoader();
+    }
+
+    private void restartLoader() {
+        getLoaderManager().restartLoader(0, null, this);
+    }
+
     private void deleteTerm() {
         getContentResolver().delete(DataProvider.TERMS_URI,
                 termFilter, null);
         setResult(RESULT_DELETED);
         finish();
     }
-
-    //Format for start and end date strings
-    final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
     public void openStartDatePicker(View view) throws ParseException {
         startDate = findViewById(R.id.startDate);
@@ -213,6 +217,11 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         datePickerDialog.show();
     }
 
+    public void openNewCourseActivity(View view) {
+        Intent intent = new Intent(this, CourseEditorActivity.class);
+        startActivity(intent);
+    }
+
     private void finishEditing() {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
@@ -226,7 +235,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                     //TODO create a pop up for when fields are empty
                     setResult(RESULT_CANCELED);
                 } else {
-                    createTerm(newTitle, newStart, newEnd, courses);
+                    createTerm(newTitle, newStart, newEnd);
                 }
                 break;
             case Intent.ACTION_EDIT:
@@ -235,7 +244,6 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         finish();
     }
 
-    //Update and existing term
     private void updateTerm(String termTitle, String termStart, String termEnd, long[] termCourses) {
         ContentValues termValues = new ContentValues();
         ContentValues courseValues = new ContentValues();
@@ -258,7 +266,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         setResult(RESULT_OK);
     }
 
-    private void createTerm(String termTitle, String termStart, String termEnd, long[] courses) {
+    private void createTerm(String termTitle, String termStart, String termEnd) {
             ContentValues termValues = new ContentValues();
             ContentValues courseValues = new ContentValues();
             termValues.put(DBOpenHelper.TERM_TITLE, termTitle);

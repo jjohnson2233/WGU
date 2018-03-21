@@ -118,4 +118,5 @@
     <string name="title_activity_assessments_list">AssessmentsListActivity</string>
     <string name="title_activity_assessment_info">AssessmentInfoActivity</string>
     <string name="title_activity_assessment_editor">AssessmentEditorActivity</string>
+    <string name="new_course_plus">New Course +</string>
 </resources>
