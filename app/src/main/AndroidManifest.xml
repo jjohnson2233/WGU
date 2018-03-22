@@ -101,6 +101,33 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.v_jarj.wgu.AssessmentInfoActivity" />
         </activity>
+        <activity
+            android:name=".MentorsListActivity"
+            android:label="@string/title_activity_mentors_list"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.MainActivity" />
+        </activity>
+        <activity
+            android:name=".MentorInfoActivity"
+            android:label="@string/title_activity_mentor_info"
+            android:parentActivityName=".MentorsListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.MentorsListActivity" />
+        </activity>
+        <activity
+            android:name=".MentorEditorActivity"
+            android:label="@string/title_activity_mentor_editor"
+            android:parentActivityName=".MentorInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.MentorInfoActivity" />
+        </activity>
     </application>
 
 </manifest>

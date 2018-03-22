@@ -28,6 +28,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void openMentorsList(View veiw) {
+        Intent intent = new Intent(this, MentorsListActivity.class);
+        startActivity(intent);
+    }
+
     public void openAssessmentsList(View view) {
         Intent intent = new Intent(this, AssessmentsListActivity.class);
         startActivity(intent);

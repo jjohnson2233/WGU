@@ -124,4 +124,16 @@
     <string name="title_activity_assessment_info">AssessmentInfoActivity</string>
     <string name="title_activity_assessment_editor">AssessmentEditorActivity</string>
     <string name="new_course_plus">New Course +</string>
+    <string name="title_activity_mentors_list">MentorsListActivity</string>
+    <string name="title_activity_mentor_info">MentorInfoActivity</string>
+    <string name="title_activity_mentor_editor">MentorEditorActivity</string>
+    <string name="name">Name</string>
+    <string name="email">Email:</string>
+    <string name="phone">Phone:</string>
+    <string name="email_example">test@example.com</string>
+    <string name="example_phone_number">555-555-5555</string>
+    <string name="email_hint">Email</string>
+    <string name="phone_hint">Phone</string>
+    <string name="new_mentor">New Mentor</string>
+    <string name="edit_mentor">Edit Mentor</string>
 </resources>
