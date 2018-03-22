@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class MentorInfoActivity extends AppCompatActivity {
     private static final int EDITOR_REQUEST_CODE = 1001;
-    private TextView title;
+    private TextView name;
     private TextView email;
     private TextView phone;
 
@@ -24,7 +24,7 @@ public class MentorInfoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        title = findViewById(R.id.title);
+        name = findViewById(R.id.name);
         email = findViewById(R.id.email);
         phone = findViewById(R.id.phone);
 
@@ -55,7 +55,7 @@ public class MentorInfoActivity extends AppCompatActivity {
         String oldName = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_NAME));
         String oldEmail = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_EMAIL));
         String oldPhone = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_PHONE));
-        title.setText(oldName);
+        name.setText(oldName);
         email.setText(oldEmail);
         phone.setText(oldPhone);
         cursor.close();

@@ -29,6 +29,7 @@ public class MentorEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mentor_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         name = findViewById(R.id.name);

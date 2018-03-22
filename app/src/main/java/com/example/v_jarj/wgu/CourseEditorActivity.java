@@ -1,8 +1,11 @@
 package com.example.v_jarj.wgu;
 
 import android.app.DatePickerDialog;
+import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,16 +17,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
-public class CourseEditorActivity extends AppCompatActivity {
+public class CourseEditorActivity extends AppCompatActivity
+implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int RESULT_DELETED = 2;
     private String action;
     private EditText title;
@@ -37,6 +45,13 @@ public class CourseEditorActivity extends AppCompatActivity {
     private String oldStatus;
     private Calendar calendar;
     private SimpleDateFormat format;
+    private CursorAdapter mentorCursorAdapter;
+    private CursorAdapter assessmentCursorAdapter;
+    private Uri uri;
+    ListView mentorList;
+    ListView assessmentList;
+    String mentorFilter;
+    String assessmentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +73,29 @@ public class CourseEditorActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
 
+        String[] mentorFrom = {DBOpenHelper.MENTOR_NAME};
+        String[] assessmentFrom = {DBOpenHelper.ASSESSMENT_TITLE};
+        int[] to = {android.R.id.text1};
+        mentorCursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_multiple_choice, null, mentorFrom, to, 0);
+        assessmentCursorAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_multiple_choice, null, assessmentFrom, to, 0);
+
+        mentorList = findViewById(R.id.mentorsList);
+        assessmentList = findViewById(R.id.assessmentsList);
+        mentorList.setAdapter(mentorCursorAdapter);
+        assessmentList.setAdapter(assessmentCursorAdapter);
+        mentorList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        assessmentList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        mentorList.setItemsCanFocus(false);
+        assessmentList.setItemsCanFocus(false);
+
         Intent intent = getIntent();
 
-        Uri uri = intent.getParcelableExtra("Course");
+        uri = intent.getParcelableExtra("Course");
+
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
 
         if (uri == null) {
             action = Intent.ACTION_INSERT;
@@ -81,10 +116,10 @@ public class CourseEditorActivity extends AppCompatActivity {
             startDate.setText(oldStart);
             endDate.setText(oldEnd);
             switch (oldStatus) {
-                case "In-progress":
+                case "Not Started":
                     statusSpinner.setSelection(0);
                     break;
-                case "Not Started":
+                case "In-progress":
                     statusSpinner.setSelection(1);
                     break;
                 case "Completed":
@@ -182,7 +217,7 @@ public class CourseEditorActivity extends AppCompatActivity {
                 }
                 break;
             case Intent.ACTION_EDIT:
-                if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd)) {
+                if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd) && oldStatus.equals(newStatus)) {
                     setResult(RESULT_CANCELED);
                 } else {
                     updateCourse(newTitle, newStart, newEnd, newStatus);
@@ -191,23 +226,36 @@ public class CourseEditorActivity extends AppCompatActivity {
         finish();
     }
 
-    private void updateCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus) {
-        ContentValues values = new ContentValues();
-        //Performs checks to see if changes were actually made
-        if (!oldTitle.equals(courseTitle)) {
-            values.put(DBOpenHelper.COURSE_TITLE, courseTitle);
+    private void updateCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus, long[] courseMentors, long[] courseAssessments) {
+        ContentValues courseValues = new ContentValues();
+        ContentValues mentorValues = new ContentValues();
+        ContentValues assessmentValues = new ContentValues();
+        ContentValues emptyValues = new ContentValues();
+        String courseID = uri.getLastPathSegment();
+        //Get the values for the course
+        courseValues.put(DBOpenHelper.COURSE_TITLE, courseTitle);
+        courseValues.put(DBOpenHelper.COURSE_START, courseStart);
+        courseValues.put(DBOpenHelper.COURSE_END, courseEnd);
+        courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
+        //Get the values for the mentors
+        mentorValues.put(DBOpenHelper.COURSE_ID, courseID);
+        assessmentValues.put(DBOpenHelper.COURSE_ID, courseID);
+        //Get null values for unchecked items
+        emptyValues.putNull(DBOpenHelper.COURSE_ID);
+        //Update course values in the database
+        getContentResolver().update(DataProvider.COURSES_URI, courseValues, courseFilter, null);
+        //Clear the course values for the unchecked items
+        getContentResolver().update(DataProvider.MENTORS_URI, emptyValues, null, null);
+        getContentResolver().update(DataProvider.ASSESSMENTS_URI, emptyValues, null, null);
+        //Update mentor values in the database
+        for (long id : courseMentors) {
+            mentorFilter = DBOpenHelper.ID + "=" + id;
+            getContentResolver().update(DataProvider.MENTORS_URI, courseValues, mentorFilter, null);
         }
-        if (!oldStart.equals(courseStart)) {
-            values.put(DBOpenHelper.COURSE_START, courseStart);
+        for (long id : courseMentors) {
+            assessmentFilter = DBOpenHelper.ID + "=" + id;
+            getContentResolver().update(DataProvider.ASSESSMENTS_URI, courseValues, assessmentFilter, null);
         }
-        if (!oldEnd.equals(courseEnd)) {
-            values.put(DBOpenHelper.COURSE_END, courseEnd);
-        }
-        if (!oldStatus.equals(courseStatus)) {
-            values.put(DBOpenHelper.COURSE_STATUS, courseStatus);
-        }
-        //Update value in the database
-        getContentResolver().update(DataProvider.COURSES_URI, values, courseFilter, null);
         setResult(RESULT_OK);
     }
 
@@ -219,5 +267,81 @@ public class CourseEditorActivity extends AppCompatActivity {
         values.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         getContentResolver().insert(DataProvider.COURSES_URI, values);
         setResult(RESULT_OK);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = null;
+        switch (id) {
+            case 0:
+                loader = new CursorLoader(this, DataProvider.MENTORS_URI,
+                        null, null, null, null);
+                break;
+            case 1:
+                loader = new CursorLoader(this, DataProvider.ASSESSMENTS_URI,
+                        null, null, null, null);
+                break;
+        }
+        return loader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        switch (loader.getId()) {
+            case 0:
+                mentorCursorAdapter.swapCursor(data);
+                if (Objects.equals(action, Intent.ACTION_EDIT)) {
+                    mentorFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
+                    Cursor checkedCursor = getContentResolver().query(DataProvider.MENTORS_URI,
+                            DBOpenHelper.MENTORS_ALL_COLUMNS, mentorFilter, null, null);
+                    Cursor uncheckedCursor = mentorCursorAdapter.getCursor();
+                    checkedCursor.moveToFirst();
+                    uncheckedCursor.moveToFirst();
+                    while (!checkedCursor.isAfterLast()) {
+                        int i = 0;
+                        while (!uncheckedCursor.isAfterLast()) {
+                            if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
+                                    == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
+                                mentorList.setItemChecked(i, true);
+                            }
+                            i++;
+                            uncheckedCursor.moveToNext();
+                        }
+                        uncheckedCursor.moveToFirst();
+                        checkedCursor.moveToNext();
+                    }
+                }
+                break;
+            case 1:
+                assessmentCursorAdapter.swapCursor(data);
+                if (Objects.equals(action, Intent.ACTION_EDIT)) {
+                    assessmentFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
+                    Cursor checkedCursor = getContentResolver().query(DataProvider.ASSESSMENTS_URI,
+                            DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
+                    Cursor uncheckedCursor = assessmentCursorAdapter.getCursor();
+                    checkedCursor.moveToFirst();
+                    uncheckedCursor.moveToFirst();
+                    while (!checkedCursor.isAfterLast()) {
+                        int i = 0;
+                        while (!uncheckedCursor.isAfterLast()) {
+                            if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
+                                    == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
+                                assessmentList.setItemChecked(i, true);
+                            }
+                            i++;
+                            uncheckedCursor.moveToNext();
+                        }
+                        uncheckedCursor.moveToFirst();
+                        checkedCursor.moveToNext();
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mentorCursorAdapter.swapCursor(null);
+        assessmentCursorAdapter.swapCursor(null);
     }
 }

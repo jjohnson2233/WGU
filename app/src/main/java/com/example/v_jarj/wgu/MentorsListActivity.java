@@ -28,6 +28,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.mentors);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         String[] from = {DBOpenHelper.MENTOR_NAME};
         int[] to = {android.R.id.text1};

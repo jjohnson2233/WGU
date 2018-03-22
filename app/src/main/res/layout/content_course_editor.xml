@@ -55,10 +55,10 @@
         android:textAppearance="@android:style/TextAppearance.Material.Medium"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/listView" />
+        app:layout_constraintTop_toBottomOf="@+id/mentorsList" />
 
     <ListView
-        android:id="@+id/courseList"
+        android:id="@+id/assessmentsList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -139,7 +139,7 @@
         app:layout_constraintTop_toBottomOf="@+id/status_spinner" />
 
     <ListView
-        android:id="@+id/listView"
+        android:id="@+id/mentorsList"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

@@ -36,6 +36,11 @@ public class CourseInfoActivity extends AppCompatActivity
         getSupportActionBar().setTitle(R.string.course_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        title = findViewById(R.id.title);
+        startDate = findViewById(R.id.startDate);
+        endDate = findViewById(R.id.endDate);
+        status = findViewById(R.id.status);
+
         String[] mentorFrom = {DBOpenHelper.MENTOR_NAME};
         String[] assessmentFrom = {DBOpenHelper.ASSESSMENT_TITLE};
         int[] to = {android.R.id.text1};
@@ -48,11 +53,6 @@ public class CourseInfoActivity extends AppCompatActivity
         ListView assessmentList = findViewById(R.id.assessmentsList);
         mentorList.setAdapter(mentorCursorAdapter);
         assessmentList.setAdapter(assessmentCursorAdapter);
-
-        title = findViewById(R.id.title);
-        startDate = findViewById(R.id.startDate);
-        endDate = findViewById(R.id.endDate);
-        status = findViewById(R.id.status);
 
         populateFields();
 
@@ -87,14 +87,17 @@ public class CourseInfoActivity extends AppCompatActivity
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = null;
+        Uri uri = getIntent().getParcelableExtra("Course");
         switch (id) {
             case 0:
+                String mentorFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
                 loader = new CursorLoader(this, DataProvider.MENTORS_URI,
-                        null, null, null, null);
+                        null, mentorFilter, null, null);
                 break;
             case 1:
+                String assessmentFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
                 loader = new CursorLoader(this, DataProvider.ASSESSMENTS_URI,
-                        null, null, null, null);
+                        null, assessmentFilter, null, null);
                 break;
         }
         return loader;

@@ -22,24 +22,24 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String[] TERMS_ALL_COLUMNS = 
             {ID, TERM_TITLE, TERM_START, TERM_END};
 
-    //Mentors Table
-    public static final String TABLE_MENTORS = "mentors";
-    public static final String MENTOR_ID = "mentorID";
-    public static final String MENTOR_NAME = "name";
-    public static final String MENTOR_PHONE = "phone";
-    public static final String MENTOR_EMAIL = "email";
-    public static final String[] MENTORS_ALL_COLUMNS =
-            {ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL};
-    
     //Courses Table
     public static final String TABLE_COURSES = "courses";
+
     public static final String COURSE_ID = "course_ID";
     public static final String COURSE_TITLE = "title";
     public static final String COURSE_START = "startDate";
     public static final String COURSE_END = "endDate";
     public static final String COURSE_STATUS = "status";
-    public static final String[] COURSES_ALL_COLUMNS = 
-            {ID, COURSE_TITLE, COURSE_START, COURSE_END, COURSE_STATUS, MENTOR_ID, TERM_ID};
+    public static final String[] COURSES_ALL_COLUMNS =
+            {ID, COURSE_TITLE, COURSE_START, COURSE_END, COURSE_STATUS, TERM_ID};
+
+    //Mentors Table
+    public static final String TABLE_MENTORS = "mentors";
+    public static final String MENTOR_NAME = "name";
+    public static final String MENTOR_PHONE = "phone";
+    public static final String MENTOR_EMAIL = "email";
+    public static final String[] MENTORS_ALL_COLUMNS =
+            {ID, MENTOR_NAME, MENTOR_PHONE, MENTOR_EMAIL, COURSE_ID};
 
     //Assessments Table
     public static final String TABLE_ASSESSMENTS = "assessments";
@@ -59,15 +59,6 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     TERM_END + " TEXT" +
                     ")";
 
-    //SQL to create tables
-    private static final String TABLE_CREATE_MENTORS =
-            "CREATE TABLE " + TABLE_MENTORS + " (" +
-                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    MENTOR_NAME + " TEXT, " +
-                    MENTOR_PHONE + " TEXT, " +
-                    MENTOR_EMAIL + " TEXT" +
-                    ")";
-
     private static final String TABLE_CREATE_COURSES =
             "CREATE TABLE " + TABLE_COURSES + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -75,10 +66,18 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     COURSE_START + " TEXT, " +
                     COURSE_END + " TEXT, " +
                     COURSE_STATUS + " TEXT, " +
-                    MENTOR_ID + " INTEGER, " +
                     TERM_ID + " INTEGER, " +
-                    "FOREIGN KEY(" + MENTOR_ID + ") REFERENCES " + TABLE_MENTORS + "(" + ID + "), " +
                     "FOREIGN KEY(" + TERM_ID + ") REFERENCES " + TABLE_TERMS + "(" + ID + ")" +
+                    ")";
+
+    private static final String TABLE_CREATE_MENTORS =
+            "CREATE TABLE " + TABLE_MENTORS + " (" +
+                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    MENTOR_NAME + " TEXT, " +
+                    MENTOR_PHONE + " TEXT, " +
+                    MENTOR_EMAIL + " TEXT, " +
+                    COURSE_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + COURSE_ID + ") REFERENCES " + TABLE_COURSES + "(" + ID + ")" +
                     ")";
 
     private static final String TABLE_CREATE_ASSESSMENTS =
@@ -98,18 +97,18 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(TABLE_CREATE_TERMS);
+        db.execSQL(TABLE_CREATE_COURSES);
         db.execSQL(TABLE_CREATE_MENTORS);
         db.execSQL(TABLE_CREATE_ASSESSMENTS);
-        db.execSQL(TABLE_CREATE_COURSES);
-        db.execSQL(TABLE_CREATE_TERMS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TERMS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MENTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TERMS);
         onCreate(db);
     }
 }
