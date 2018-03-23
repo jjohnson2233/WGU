@@ -1,9 +1,11 @@
 package com.example.v_jarj.wgu;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
@@ -179,10 +181,23 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     }
 
     private void deleteTerm() {
-        getContentResolver().delete(DataProvider.TERMS_URI,
-                termFilter, null);
-        setResult(RESULT_DELETED);
-        finish();
+        if (list.getCheckedItemCount() == 0) {
+            getContentResolver().delete(DataProvider.TERMS_URI,
+                    termFilter, null);
+            setResult(RESULT_DELETED);
+            finish();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.assigned_courses_message);
+            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
     }
 
     public void openStartDatePicker(View view) throws ParseException {

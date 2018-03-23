@@ -1,37 +1,37 @@
 package com.example.v_jarj.wgu;
 
-import android.app.DatePickerDialog;
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
-import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.WindowManager;
-import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
+        import android.app.DatePickerDialog;
+        import android.app.LoaderManager;
+        import android.content.ContentValues;
+        import android.content.CursorLoader;
+        import android.content.Intent;
+        import android.content.Loader;
+        import android.database.Cursor;
+        import android.net.Uri;
+        import android.os.Bundle;
+        import android.support.design.widget.FloatingActionButton;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.WindowManager;
+        import android.widget.ArrayAdapter;
+        import android.widget.CursorAdapter;
+        import android.widget.DatePicker;
+        import android.widget.EditText;
+        import android.widget.ListView;
+        import android.widget.SimpleCursorAdapter;
+        import android.widget.Spinner;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-import java.util.Objects;
+        import java.text.ParseException;
+        import java.text.SimpleDateFormat;
+        import java.util.Calendar;
+        import java.util.Locale;
+        import java.util.Objects;
 
 public class CourseEditorActivity extends AppCompatActivity
-implements LoaderManager.LoaderCallbacks<Cursor> {
+        implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int RESULT_DELETED = 2;
     private String action;
     private EditText title;
