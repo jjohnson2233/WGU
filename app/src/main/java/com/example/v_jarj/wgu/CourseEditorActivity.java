@@ -205,6 +205,8 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         String newStart = startDate.getText().toString().trim();
         String newEnd = endDate.getText().toString().trim();
         String newStatus = (String) statusSpinner.getSelectedItem();
+        long[] mentors = mentorList.getCheckedItemIds();
+        long[] assessments = assessmentList.getCheckedItemIds();
 
         switch (action) {
             case Intent.ACTION_INSERT:
@@ -213,20 +215,24 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                     //TODO create a pop up for when fields are empty
                     setResult(RESULT_CANCELED);
                 } else {
-                    createCourse(newTitle, newStart, newEnd, newStatus);
+                    createCourse(newTitle, newStart, newEnd, newStatus, mentors, assessments);
                 }
                 break;
             case Intent.ACTION_EDIT:
-                if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd) && oldStatus.equals(newStatus)) {
+                //Check to see if anything was changed
+                if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd)
+                        && oldStatus.equals(newStatus) && mentors.length == 0 && assessments.length == 0) {
+                    //If nothing was changed, don't do anything
                     setResult(RESULT_CANCELED);
                 } else {
-                    updateCourse(newTitle, newStart, newEnd, newStatus);
+                    updateCourse(newTitle, newStart, newEnd, newStatus, mentors, assessments);
                 }
         }
         finish();
     }
 
-    private void updateCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus, long[] courseMentors, long[] courseAssessments) {
+    private void updateCourse(String courseTitle, String courseStart, String courseEnd,
+                              String courseStatus, long[] courseMentors, long[] courseAssessments) {
         ContentValues courseValues = new ContentValues();
         ContentValues mentorValues = new ContentValues();
         ContentValues assessmentValues = new ContentValues();
@@ -250,22 +256,41 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         //Update mentor values in the database
         for (long id : courseMentors) {
             mentorFilter = DBOpenHelper.ID + "=" + id;
-            getContentResolver().update(DataProvider.MENTORS_URI, courseValues, mentorFilter, null);
+            getContentResolver().update(DataProvider.MENTORS_URI, mentorValues, mentorFilter, null);
         }
-        for (long id : courseMentors) {
+        for (long id : courseAssessments) {
             assessmentFilter = DBOpenHelper.ID + "=" + id;
-            getContentResolver().update(DataProvider.ASSESSMENTS_URI, courseValues, assessmentFilter, null);
+            getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
         }
         setResult(RESULT_OK);
     }
 
-    private void createCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus) {
-        ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.COURSE_TITLE, courseTitle);
-        values.put(DBOpenHelper.COURSE_START, courseStart);
-        values.put(DBOpenHelper.COURSE_END, courseEnd);
-        values.put(DBOpenHelper.COURSE_STATUS, courseStatus);
-        getContentResolver().insert(DataProvider.COURSES_URI, values);
+    private void createCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus, long[] courseMentors, long[] courseAssessments) {
+        ContentValues courseValues = new ContentValues();
+        ContentValues mentorValues = new ContentValues();
+        ContentValues assessmentValues = new ContentValues();
+        //Get values for the course
+        courseValues.put(DBOpenHelper.COURSE_TITLE, courseTitle);
+        courseValues.put(DBOpenHelper.COURSE_START, courseStart);
+        courseValues.put(DBOpenHelper.COURSE_END, courseEnd);
+        courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
+        //Create a new course with the values
+        getContentResolver().insert(DataProvider.COURSES_URI, courseValues);
+        courseFilter = DBOpenHelper.COURSE_TITLE + "=\"" + courseTitle + "\"";
+        Cursor cursor = getContentResolver().query(DataProvider.COURSES_URI,
+                DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
+        cursor.moveToFirst();
+        int termID = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
+        mentorValues.put(DBOpenHelper.TERM_ID, termID);
+        assessmentValues.put(DBOpenHelper.TERM_ID, termID);
+        for (long id : courseMentors) {
+            mentorFilter = DBOpenHelper.ID + "=" + id;
+            getContentResolver().update(DataProvider.MENTORS_URI, mentorValues, mentorFilter, null);
+        }
+        for (long id : courseAssessments) {
+            assessmentFilter = DBOpenHelper.ID + "=" + id;
+            getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
+        }
         setResult(RESULT_OK);
     }
 
