@@ -39,13 +39,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     private EditText endDate;
     private String termFilter;
     private String courseFilter;
-    private String oldTitle;
-    private String oldStart;
-    private String oldEnd;
     private Calendar calendar;
     private CursorAdapter cursorAdapter;
     private Uri uri;
-    private long[] courses;
     ListView list;
     private final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
@@ -89,9 +85,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
             cursor.moveToFirst();
-            oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_TITLE));
-            oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_START));
-            oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_END));
+            String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_TITLE));
+            String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_START));
+            String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_END));
             title.setText(oldTitle);
             startDate.setText(oldStart);
             endDate.setText(oldEnd);
@@ -237,7 +233,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
         String newEnd = endDate.getText().toString().trim();
-        courses = list.getCheckedItemIds();
+        long[] courses = list.getCheckedItemIds();
 
         switch (action) {
             case Intent.ACTION_INSERT:

@@ -79,7 +79,7 @@
         android:ems="10"
         android:hint="@string/date_format"
         android:inputType="date"
-        app:layout_constraintEnd_toStartOf="@+id/startDateButton"
+        app:layout_constraintEnd_toStartOf="@+id/dueDateButton"
         app:layout_constraintStart_toEndOf="@+id/textView"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -92,17 +92,17 @@
         android:hint="@string/date_format"
         android:inputType="date"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
-        app:layout_constraintEnd_toStartOf="@+id/startDateButton"
+        app:layout_constraintEnd_toStartOf="@+id/dueDateButton"
         app:layout_constraintStart_toEndOf="@+id/textView2" />
 
     <Button
-        android:id="@+id/startDateButton"
+        android:id="@+id/dueDateButton"
         android:layout_width="30sp"
         android:layout_height="30sp"
         android:layout_marginEnd="8dp"
         android:background="@android:drawable/ic_menu_my_calendar"
         android:backgroundTint="@android:color/background_dark"
-        android:onClick="openStartDatePicker"
+        android:onClick="openDueDatePicker"
         app:layout_constraintBaseline_toBaselineOf="@+id/startDate"
         app:layout_constraintEnd_toEndOf="parent" />
 
