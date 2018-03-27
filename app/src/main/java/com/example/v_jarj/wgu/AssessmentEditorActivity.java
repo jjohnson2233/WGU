@@ -32,6 +32,7 @@ import java.security.PrivateKey;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class AssessmentEditorActivity extends AppCompatActivity {
@@ -59,7 +60,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        title = findViewById(android.R.id.title);
+        title = findViewById(R.id.title);
         dueDate = findViewById(R.id.dueDate);
         reminderSwitch = findViewById(R.id.reminderSwitch);
 
@@ -175,7 +176,8 @@ public class AssessmentEditorActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, dueDate.getText().toString().trim());
+                    //TODO schedule a notification on the due date.
+                    assessmentValues.put(DBOpenHelper.ASSESSMENT_DUE, dueDate.getText().toString().trim());
                 } else {
                     assessmentValues.putNull(DBOpenHelper.ASSESSMENT_ALERT);
                 }
