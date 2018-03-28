@@ -160,4 +160,5 @@
     <string name="title_activity_notes_list">NotesListActivity</string>
     <string name="notes_title">Notes</string>
     <string name="title_activity_note_editor">NoteEditorActivity</string>
+    <string name="note_editor_title">Edit Note</string>
 </resources>

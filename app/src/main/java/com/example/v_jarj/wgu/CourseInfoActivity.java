@@ -105,7 +105,7 @@ public class CourseInfoActivity extends AppCompatActivity
                 break;
             case R.id.action_notes:
                 Intent intent = new Intent(CourseInfoActivity.this, NotesListActivity.class);
-                Uri uri = getIntent().getParcelableExtra("course");
+                Uri uri = getIntent().getParcelableExtra("Course");
                 intent.putExtra("Course", uri);
                 startActivity(intent);
                 break;

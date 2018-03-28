@@ -43,6 +43,8 @@ public class NotesListActivity extends AppCompatActivity
                 Intent intent = new Intent(NotesListActivity.this, NoteEditorActivity.class);
                 Uri uri = Uri.parse(DataProvider.NOTES_URI + "/" + id);
                 intent.putExtra("Note", uri);
+                uri = getIntent().getParcelableExtra("Course");
+                intent.putExtra("Course", uri);
                 startActivity(intent);
             }
         });
@@ -54,6 +56,8 @@ public class NotesListActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(NotesListActivity.this, NoteEditorActivity.class);
+                Uri uri = getIntent().getParcelableExtra("Course");
+                intent.putExtra("Course", uri);
                 startActivity(intent);
             }
         });
@@ -62,8 +66,10 @@ public class NotesListActivity extends AppCompatActivity
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        Uri uri = getIntent().getParcelableExtra("Course");
+        String noteFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
         return new CursorLoader(this, DataProvider.NOTES_URI,
-                null, null, null, null);
+                null, noteFilter, null, null);
     }
 
     @Override

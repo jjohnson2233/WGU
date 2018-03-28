@@ -77,7 +77,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     private static final String TABLE_CREATE_NOTES =
             "CREATE TABLE " + TABLE_NOTES + " (" +
-                    ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     NOTE_CONTENT + " TEXT, " +
                     COURSE_ID + " INTEGER, " +
                     "FOREIGN KEY(" + COURSE_ID + ") REFERENCES " + TABLE_COURSES + "(" + ID + ")" +
