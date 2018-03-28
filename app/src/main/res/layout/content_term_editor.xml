@@ -73,7 +73,7 @@
     </ListView>
 
     <EditText
-        android:id="@+id/startDate"
+        android:id="@+id/dueDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -104,8 +104,8 @@
         android:layout_marginEnd="8dp"
         android:background="@android:drawable/ic_menu_my_calendar"
         android:backgroundTint="@android:color/background_dark"
-        android:onClick="openDueDatePicker"
-        app:layout_constraintBaseline_toBaselineOf="@+id/startDate"
+        android:onClick="openStartDatePicker"
+        app:layout_constraintBaseline_toBaselineOf="@+id/dueDate"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button

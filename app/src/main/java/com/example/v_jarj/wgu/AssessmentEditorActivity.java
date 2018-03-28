@@ -1,12 +1,8 @@
 package com.example.v_jarj.wgu;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
-import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,21 +14,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.CursorAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.ToggleButton;
 
-import java.security.PrivateKey;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class AssessmentEditorActivity extends AppCompatActivity {
@@ -41,15 +32,11 @@ public class AssessmentEditorActivity extends AppCompatActivity {
     private String action;
     private EditText title;
     private EditText dueDate;
-    private Switch reminderSwitch;
+    private CheckBox reminder;
     private Spinner spinner;
     private String assessmentFilter;
-    private String oldTitle;
-    private String oldDue;
     private Calendar calendar;
-    private CursorAdapter cursorAdapter;
     private final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-    private Uri uri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +49,16 @@ public class AssessmentEditorActivity extends AppCompatActivity {
 
         title = findViewById(R.id.title);
         dueDate = findViewById(R.id.dueDate);
-        reminderSwitch = findViewById(R.id.reminderSwitch);
+        reminder = findViewById(R.id.reminder);
 
-        Spinner spinner = findViewById(R.id.typeSpinner);
+        spinner = findViewById(R.id.typeSpinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.type_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
         Intent intent = getIntent();
-        uri = intent.getParcelableExtra("Assessment");
+        Uri uri = intent.getParcelableExtra("Assessment");
 
         if (uri == null) {
             action = Intent.ACTION_INSERT;
@@ -84,10 +71,28 @@ public class AssessmentEditorActivity extends AppCompatActivity {
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
             cursor.moveToFirst();
-            oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TITLE));
-            oldDue = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_DUE));
+            String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TITLE));
+            String oldDue = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_DUE));
+            String oldType = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TYPE));
+            String oldReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_ALERT));
             title.setText(oldTitle);
             dueDate.setText(oldDue);
+            switch (oldType) {
+                case "Objective Assessment":
+                    spinner.setSelection(0);
+                    break;
+                case "Performance Assessment":
+                    spinner.setSelection(1);
+                    break;
+            }
+            switch (oldReminder) {
+                case "On":
+                    reminder.setChecked(true);
+                    break;
+                case "Off":
+                    reminder.setChecked(false);
+                    break;
+            }
             cursor.close();
         }
 
@@ -171,18 +176,11 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TITLE, assessmentTitle);
         assessmentValues.put(DBOpenHelper.ASSESSMENT_DUE, assessmentStart);
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TYPE, assessmentType);
-        //Get status of the reminder switch
-        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    //TODO schedule a notification on the due date.
-                    assessmentValues.put(DBOpenHelper.ASSESSMENT_DUE, dueDate.getText().toString().trim());
-                } else {
-                    assessmentValues.putNull(DBOpenHelper.ASSESSMENT_ALERT);
-                }
-            }
-        });
+        if (reminder.isChecked()) {
+            assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "On");
+        } else {
+            assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "Off");
+        }
         //Update value in the database
         getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
         setResult(RESULT_OK);
@@ -194,14 +192,11 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TITLE, assessmentTitle);
         assessmentValues.put(DBOpenHelper.ASSESSMENT_DUE, assessmentStart);
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TYPE, assessmentType);
-        reminderSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, dueDate.getText().toString().trim());
-                }
-            }
-        });
+        if (reminder.isChecked()) {
+            assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "On");
+        } else {
+            assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "Off");
+        }
         //Add values to the database
         getContentResolver().insert(DataProvider.ASSESSMENTS_URI, assessmentValues);
         setResult(RESULT_OK);

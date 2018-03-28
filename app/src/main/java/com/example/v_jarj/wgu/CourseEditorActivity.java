@@ -63,7 +63,7 @@ public class CourseEditorActivity extends AppCompatActivity
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         title = findViewById(R.id.title);
-        startDate = findViewById(R.id.startDate);
+        startDate = findViewById(R.id.dueDate);
         endDate = findViewById(R.id.endDate);
         format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
@@ -168,7 +168,7 @@ public class CourseEditorActivity extends AppCompatActivity
     }
 
     public void openStartDatePicker(View view) throws ParseException {
-        startDate = findViewById(R.id.startDate);
+        startDate = findViewById(R.id.dueDate);
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override

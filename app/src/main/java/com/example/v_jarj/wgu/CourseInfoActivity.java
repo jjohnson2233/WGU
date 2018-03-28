@@ -16,7 +16,6 @@ import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 public class CourseInfoActivity extends AppCompatActivity
@@ -39,7 +38,7 @@ public class CourseInfoActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(R.id.title);
-        startDate = findViewById(R.id.startDate);
+        startDate = findViewById(R.id.dueDate);
         endDate = findViewById(R.id.endDate);
         status = findViewById(R.id.status);
 

@@ -148,7 +148,12 @@
     <string name="course_nav_info">Info</string>
     <string name="course_nav_notes">Notes</string>
     <string name="due_date_label">Due Date:</string>
-    <string name="reminder_label">Reminder</string>
+    <string name="reminder">Reminder</string>
     <string name="new_assessment">New Assessment</string>
     <string name="edit_assessment">Edit Assessment</string>
+    <string name="assessment_info_title">Assessment Info</string>
+    <string name="type_label">Type:</string>
+    <string name="type_example">Objective/Performance</string>
+    <string name="reminder_label">Reminder:</string>
+    <string name="reminder_example">On/Off</string>
 </resources>
