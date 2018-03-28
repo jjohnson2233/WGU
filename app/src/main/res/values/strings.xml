@@ -156,4 +156,5 @@
     <string name="type_example">Objective/Performance</string>
     <string name="reminder_label">Reminder:</string>
     <string name="reminder_example">On/Off</string>
+    <string name="mentor_info_title">Mentor Info</string>
 </resources>

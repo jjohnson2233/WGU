@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
@@ -18,7 +19,6 @@ import android.widget.SimpleCursorAdapter;
 
 public class CoursesListActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<Cursor> {
-    private static final int EDITOR_REQUEST_CODE = 1001;
     private CursorAdapter cursorAdapter;
 
     @Override
@@ -56,7 +56,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(CoursesListActivity.this, CourseEditorActivity.class);
-                startActivityForResult(intent, EDITOR_REQUEST_CODE);
+                startActivity(intent);
             }
         });
 

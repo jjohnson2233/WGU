@@ -23,6 +23,7 @@ public class MentorInfoActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.mentor_info_title);
 
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
