@@ -132,7 +132,26 @@
         <service
             android:name=".ReminderService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity
+            android:name=".NotesListActivity"
+            android:label="@string/title_activity_notes_list"
+            android:parentActivityName=".CourseInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.CourseInfoActivity" />
+        </activity>
+        <activity
+            android:name=".NoteEditorActivity"
+            android:label="@string/title_activity_note_editor"
+            android:parentActivityName=".NotesListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.v_jarj.wgu.NotesListActivity" />
+        </activity>
     </application>
 
 </manifest>

@@ -157,4 +157,7 @@
     <string name="reminder_label">Reminder:</string>
     <string name="reminder_example">On/Off</string>
     <string name="mentor_info_title">Mentor Info</string>
+    <string name="title_activity_notes_list">NotesListActivity</string>
+    <string name="notes_title">Notes</string>
+    <string name="title_activity_note_editor">NoteEditorActivity</string>
 </resources>

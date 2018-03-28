@@ -98,8 +98,19 @@ public class CourseInfoActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //TODO navigate to the notes activity
-        return super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                setResult(RESULT_CANCELED);
+                finish();
+                break;
+            case R.id.action_notes:
+                Intent intent = new Intent(CourseInfoActivity.this, NotesListActivity.class);
+                Uri uri = getIntent().getParcelableExtra("course");
+                intent.putExtra("Course", uri);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     @Override

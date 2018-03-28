@@ -24,7 +24,6 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 
     //Courses Table
     public static final String TABLE_COURSES = "courses";
-
     public static final String COURSE_ID = "course_ID";
     public static final String COURSE_TITLE = "title";
     public static final String COURSE_START = "startDate";
@@ -32,6 +31,12 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public static final String COURSE_STATUS = "status";
     public static final String[] COURSES_ALL_COLUMNS =
             {ID, COURSE_TITLE, COURSE_START, COURSE_END, COURSE_STATUS, TERM_ID};
+
+    //Notes table
+    public static final String TABLE_NOTES = "notes";
+    public static final String NOTE_CONTENT = "content";
+    public static final String[] NOTES_ALL_COLUMNS =
+            {ID, NOTE_CONTENT};
 
     //Mentors Table
     public static final String TABLE_MENTORS = "mentors";
@@ -70,6 +75,14 @@ public class DBOpenHelper extends SQLiteOpenHelper {
                     "FOREIGN KEY(" + TERM_ID + ") REFERENCES " + TABLE_TERMS + "(" + ID + ")" +
                     ")";
 
+    private static final String TABLE_CREATE_NOTES =
+            "CREATE TABLE " + TABLE_NOTES + " (" +
+                    ID + "INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    NOTE_CONTENT + " TEXT, " +
+                    COURSE_ID + " INTEGER, " +
+                    "FOREIGN KEY(" + COURSE_ID + ") REFERENCES " + TABLE_COURSES + "(" + ID + ")" +
+                    ")";
+
     private static final String TABLE_CREATE_MENTORS =
             "CREATE TABLE " + TABLE_MENTORS + " (" +
                     ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -99,6 +112,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE_TERMS);
         db.execSQL(TABLE_CREATE_COURSES);
+        db.execSQL(TABLE_CREATE_NOTES);
         db.execSQL(TABLE_CREATE_MENTORS);
         db.execSQL(TABLE_CREATE_ASSESSMENTS);
     }
@@ -107,6 +121,7 @@ public class DBOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TERMS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_COURSES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MENTORS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENTS);
         onCreate(db);
