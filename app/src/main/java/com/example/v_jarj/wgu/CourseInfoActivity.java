@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -54,6 +55,26 @@ public class CourseInfoActivity extends AppCompatActivity
         ListView assessmentList = findViewById(R.id.assessmentsList);
         mentorList.setAdapter(mentorCursorAdapter);
         assessmentList.setAdapter(assessmentCursorAdapter);
+
+        mentorList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(CourseInfoActivity.this, MentorInfoActivity.class);
+                Uri uri = Uri.parse(DataProvider.MENTORS_URI + "/" + id);
+                intent.putExtra("Mentor", uri);
+                startActivity(intent);
+            }
+        });
+
+        assessmentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(CourseInfoActivity.this, AssessmentInfoActivity.class);
+                Uri uri = Uri.parse(DataProvider.ASSESSMENTS_URI + "/" + id);
+                intent.putExtra("Assessment", uri);
+                startActivity(intent);
+            }
+        });
 
         populateFields();
 
@@ -134,6 +155,12 @@ public class CourseInfoActivity extends AppCompatActivity
         assessmentCursorAdapter.swapCursor(null);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        restartLoader();
+    }
+
     private void populateFields() {
         Intent intent = getIntent();
         Uri uri = intent.getParcelableExtra("Course");
@@ -155,5 +182,6 @@ public class CourseInfoActivity extends AppCompatActivity
 
     private void restartLoader() {
         getLoaderManager().restartLoader(0, null, this);
+        getLoaderManager().restartLoader(1, null, null);
     }
 }
