@@ -27,6 +27,7 @@ package com.example.v_jarj.wgu;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
+        import java.util.Date;
         import java.util.Locale;
         import java.util.Objects;
 
@@ -280,9 +281,9 @@ public class CourseEditorActivity extends AppCompatActivity
         Cursor cursor = getContentResolver().query(DataProvider.COURSES_URI,
                 DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
         cursor.moveToFirst();
-        int termID = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
-        mentorValues.put(DBOpenHelper.TERM_ID, termID);
-        assessmentValues.put(DBOpenHelper.TERM_ID, termID);
+        int courseID = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
+        mentorValues.put(DBOpenHelper.COURSE_ID, courseID);
+        assessmentValues.put(DBOpenHelper.COURSE_ID, courseID);
         for (long id : courseMentors) {
             mentorFilter = DBOpenHelper.ID + "=" + id;
             getContentResolver().update(DataProvider.MENTORS_URI, mentorValues, mentorFilter, null);
@@ -335,8 +336,6 @@ public class CourseEditorActivity extends AppCompatActivity
                         uncheckedCursor.moveToFirst();
                         checkedCursor.moveToNext();
                     }
-                } else {
-
                 }
                 break;
             case 1:
@@ -345,7 +344,8 @@ public class CourseEditorActivity extends AppCompatActivity
                     assessmentFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
                     Cursor checkedCursor = getContentResolver().query(DataProvider.ASSESSMENTS_URI,
                             DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
-                    Cursor uncheckedCursor = assessmentCursorAdapter.getCursor();
+                    Cursor uncheckedCursor = getContentResolver().query(DataProvider.ASSESSMENTS_URI,
+                            DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, null, null, null);
                     checkedCursor.moveToFirst();
                     uncheckedCursor.moveToFirst();
                     while (!checkedCursor.isAfterLast()) {
