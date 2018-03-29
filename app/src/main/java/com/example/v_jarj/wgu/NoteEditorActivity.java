@@ -28,6 +28,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.note_editor_title);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         content = findViewById(R.id.content);
 

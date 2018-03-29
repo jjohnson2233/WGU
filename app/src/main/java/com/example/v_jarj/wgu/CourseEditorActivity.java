@@ -300,11 +300,11 @@ public class CourseEditorActivity extends AppCompatActivity
         switch (id) {
             case 0:
                 loader = new CursorLoader(this, DataProvider.MENTORS_URI,
-                        null, null, null, null);
+                        DBOpenHelper.MENTORS_ALL_COLUMNS, null, null, null);
                 break;
             case 1:
                 loader = new CursorLoader(this, DataProvider.ASSESSMENTS_URI,
-                        null, null, null, null);
+                        DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, null, null, null);
                 break;
         }
         return loader;
@@ -335,6 +335,8 @@ public class CourseEditorActivity extends AppCompatActivity
                         uncheckedCursor.moveToFirst();
                         checkedCursor.moveToNext();
                     }
+                } else {
+
                 }
                 break;
             case 1:
