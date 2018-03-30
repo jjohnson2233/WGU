@@ -95,9 +95,6 @@ public class CourseEditorActivity extends AppCompatActivity
 
         uri = intent.getParcelableExtra("Course");
 
-        getLoaderManager().initLoader(0, null, this);
-        getLoaderManager().initLoader(1, null, this);
-
         if (uri == null) {
             action = Intent.ACTION_INSERT;
             setTitle(getString(R.string.new_course));
@@ -129,6 +126,9 @@ public class CourseEditorActivity extends AppCompatActivity
             }
             cursor.close();
         }
+
+        getLoaderManager().initLoader(0, null, this);
+        getLoaderManager().initLoader(1, null, this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -168,7 +168,7 @@ public class CourseEditorActivity extends AppCompatActivity
         finish();
     }
 
-    public void openStartDatePicker(View view) throws ParseException {
+    public void openStartDatePicker(View view) {
         startDate = findViewById(R.id.dueDate);
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -252,8 +252,9 @@ public class CourseEditorActivity extends AppCompatActivity
         //Update course values in the database
         getContentResolver().update(DataProvider.COURSES_URI, courseValues, courseFilter, null);
         //Clear the course values for the unchecked items
-        getContentResolver().update(DataProvider.MENTORS_URI, emptyValues, null, null);
-        getContentResolver().update(DataProvider.ASSESSMENTS_URI, emptyValues, null, null);
+        String unchecked = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
+        getContentResolver().update(DataProvider.MENTORS_URI, emptyValues, unchecked, null);
+        getContentResolver().update(DataProvider.ASSESSMENTS_URI, emptyValues, unchecked, null);
         //Update mentor values in the database
         for (long id : courseMentors) {
             mentorFilter = DBOpenHelper.ID + "=" + id;
@@ -300,12 +301,24 @@ public class CourseEditorActivity extends AppCompatActivity
         CursorLoader loader = null;
         switch (id) {
             case 0:
+                if (action.equals(Intent.ACTION_INSERT)) {
+                    mentorFilter = DBOpenHelper.COURSE_ID + " IS NULL";
+                } else {
+                    mentorFilter = DBOpenHelper.COURSE_ID + " IS NULL OR " +
+                            DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
+                }
                 loader = new CursorLoader(this, DataProvider.MENTORS_URI,
-                        DBOpenHelper.MENTORS_ALL_COLUMNS, null, null, null);
+                        DBOpenHelper.MENTORS_ALL_COLUMNS, mentorFilter, null, null);
                 break;
             case 1:
+                if (action.equals(Intent.ACTION_INSERT)) {
+                    assessmentFilter = DBOpenHelper.COURSE_ID + " IS NULL";
+                } else {
+                    assessmentFilter = DBOpenHelper.COURSE_ID + " IS NULL OR " +
+                            DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
+                }
                 loader = new CursorLoader(this, DataProvider.ASSESSMENTS_URI,
-                        DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, null, null, null);
+                        DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
                 break;
         }
         return loader;
@@ -317,49 +330,30 @@ public class CourseEditorActivity extends AppCompatActivity
             case 0:
                 mentorCursorAdapter.swapCursor(data);
                 if (Objects.equals(action, Intent.ACTION_EDIT)) {
-                    mentorFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
-                    Cursor checkedCursor = getContentResolver().query(DataProvider.MENTORS_URI,
-                            DBOpenHelper.MENTORS_ALL_COLUMNS, mentorFilter, null, null);
-                    Cursor uncheckedCursor = mentorCursorAdapter.getCursor();
-                    checkedCursor.moveToFirst();
-                    uncheckedCursor.moveToFirst();
-                    while (!checkedCursor.isAfterLast()) {
-                        int i = 0;
-                        while (!uncheckedCursor.isAfterLast()) {
-                            if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
-                                    == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
-                                mentorList.setItemChecked(i, true);
-                            }
-                            i++;
-                            uncheckedCursor.moveToNext();
+                    data.moveToFirst();
+                    int i = 0;
+                    while (!data.isAfterLast()) {
+                        if (Integer.parseInt(uri.getLastPathSegment())
+                                == data.getInt(data.getColumnIndex(DBOpenHelper.COURSE_ID))) {
+                            mentorList.setItemChecked(i, true);
                         }
-                        uncheckedCursor.moveToFirst();
-                        checkedCursor.moveToNext();
+                        i++;
+                        data.moveToNext();
                     }
                 }
                 break;
             case 1:
                 assessmentCursorAdapter.swapCursor(data);
                 if (Objects.equals(action, Intent.ACTION_EDIT)) {
-                    assessmentFilter = DBOpenHelper.COURSE_ID + "=" + uri.getLastPathSegment();
-                    Cursor checkedCursor = getContentResolver().query(DataProvider.ASSESSMENTS_URI,
-                            DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
-                    Cursor uncheckedCursor = getContentResolver().query(DataProvider.ASSESSMENTS_URI,
-                            DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, null, null, null);
-                    checkedCursor.moveToFirst();
-                    uncheckedCursor.moveToFirst();
-                    while (!checkedCursor.isAfterLast()) {
-                        int i = 0;
-                        while (!uncheckedCursor.isAfterLast()) {
-                            if (checkedCursor.getInt(checkedCursor.getColumnIndex(DBOpenHelper.ID))
-                                    == uncheckedCursor.getInt(uncheckedCursor.getColumnIndex(DBOpenHelper.ID))) {
-                                assessmentList.setItemChecked(i, true);
-                            }
-                            i++;
-                            uncheckedCursor.moveToNext();
+                    data.moveToFirst();
+                    int i = 0;
+                    while (!data.isAfterLast()) {
+                        if (Integer.parseInt(uri.getLastPathSegment())
+                                == data.getInt(data.getColumnIndex(DBOpenHelper.COURSE_ID))) {
+                            assessmentList.setItemChecked(i, true);
                         }
-                        uncheckedCursor.moveToFirst();
-                        checkedCursor.moveToNext();
+                        i++;
+                        data.moveToNext();
                     }
                 }
                 break;
