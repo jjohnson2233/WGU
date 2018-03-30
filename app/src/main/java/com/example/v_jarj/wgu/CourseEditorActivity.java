@@ -17,6 +17,7 @@ package com.example.v_jarj.wgu;
         import android.view.View;
         import android.view.WindowManager;
         import android.widget.ArrayAdapter;
+        import android.widget.CheckBox;
         import android.widget.CursorAdapter;
         import android.widget.DatePicker;
         import android.widget.EditText;
@@ -37,7 +38,9 @@ public class CourseEditorActivity extends AppCompatActivity
     private String action;
     private EditText title;
     private EditText startDate;
+    private CheckBox startReminder;
     private EditText endDate;
+    private CheckBox endReminder;
     private Spinner statusSpinner;
     private String courseFilter;
     private String oldTitle;
@@ -65,7 +68,9 @@ public class CourseEditorActivity extends AppCompatActivity
 
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.dueDate);
+        startReminder = findViewById(R.id.startReminder);
         endDate = findViewById(R.id.endDate);
+        endReminder = findViewById(R.id.endReminder);
         format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
         statusSpinner = findViewById(R.id.status_spinner);
@@ -267,7 +272,8 @@ public class CourseEditorActivity extends AppCompatActivity
         setResult(RESULT_OK);
     }
 
-    private void createCourse(String courseTitle, String courseStart, String courseEnd, String courseStatus, long[] courseMentors, long[] courseAssessments) {
+    private void createCourse(String courseTitle, String courseStart, String courseEnd,
+                              String courseStatus, long[] courseMentors, long[] courseAssessments) {
         ContentValues courseValues = new ContentValues();
         ContentValues mentorValues = new ContentValues();
         ContentValues assessmentValues = new ContentValues();
@@ -292,6 +298,18 @@ public class CourseEditorActivity extends AppCompatActivity
         for (long id : courseAssessments) {
             assessmentFilter = DBOpenHelper.ID + "=" + id;
             getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
+        }
+        if (startReminder.isChecked()) {
+            ContentValues reminderValues = new ContentValues();
+            reminderValues.put(DBOpenHelper.REMINDER_DATE, startDate.getText().toString().trim());
+            reminderValues.put(DBOpenHelper.COURSE_ID, courseID);
+            getContentResolver().insert(DataProvider.REMINDERS_URI, reminderValues);
+        }
+        if (endReminder.isChecked()) {
+            ContentValues reminderValues = new ContentValues();
+            reminderValues.put(DBOpenHelper.REMINDER_DATE, endDate.getText().toString().trim());
+            reminderValues.put(DBOpenHelper.COURSE_ID, courseID);
+            getContentResolver().insert(DataProvider.REMINDERS_URI, reminderValues);
         }
         setResult(RESULT_OK);
     }

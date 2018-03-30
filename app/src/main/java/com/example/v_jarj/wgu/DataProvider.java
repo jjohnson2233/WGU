@@ -19,6 +19,7 @@ public class DataProvider extends ContentProvider {
     private static final String NOTES_PATH = "notes";
     private static final String MENTORS_PATH = "mentors";
     private static final String ASSESSMENTS_PATH = "assessments";
+    private static final String REMINDERS_PATH = "reminders";
 
     //Uri's
     public static final Uri TERMS_URI = Uri.parse("content://" + AUTHORITY + "/" + TERMS_PATH );
@@ -26,6 +27,7 @@ public class DataProvider extends ContentProvider {
     public static final Uri NOTES_URI = Uri.parse("content://" + AUTHORITY + "/" + NOTES_PATH);
     public static final Uri MENTORS_URI = Uri.parse("content://" + AUTHORITY + "/" + MENTORS_PATH );
     public static final Uri ASSESSMENTS_URI = Uri.parse("content://" + AUTHORITY + "/" + ASSESSMENTS_PATH );
+    public static final Uri REMINDERS_URI = Uri.parse("content://" + AUTHORITY + "/" + REMINDERS_PATH);
 
     //Constants for identification
     private static final int TERMS = 1;
@@ -38,6 +40,8 @@ public class DataProvider extends ContentProvider {
     private static final int MENTORS_ID = 8;
     private static final int ASSESSMENTS = 9;
     private static final int ASSESSMENTS_ID = 10;
+    private static final int REMINDERS = 11;
+    private static final int REMINDERS_ID = 12;
 
     //Create uri matcher
     private static final UriMatcher uriMatcher =
@@ -60,6 +64,9 @@ public class DataProvider extends ContentProvider {
         //Match Assessments
         uriMatcher.addURI(AUTHORITY, ASSESSMENTS_PATH, ASSESSMENTS);
         uriMatcher.addURI(AUTHORITY, ASSESSMENTS_PATH + "/#", ASSESSMENTS_ID);
+        //Match Reminders
+        uriMatcher.addURI(AUTHORITY, REMINDERS_PATH, REMINDERS);
+        uriMatcher.addURI(AUTHORITY, REMINDERS_PATH + "/#", REMINDERS_ID);
     }
 
     //Declare database
@@ -95,6 +102,10 @@ public class DataProvider extends ContentProvider {
                 return database.query(DBOpenHelper.TABLE_ASSESSMENTS, DBOpenHelper.ASSESSMENTS_ALL_COLUMNS,
                         s, null, null, null,
                         DBOpenHelper.ASSESSMENT_TITLE + " ASC");
+            case REMINDERS:case REMINDERS_ID:
+                return database.query(DBOpenHelper.TABLE_REMINDERS, DBOpenHelper.REMINDERS_ALL_COLUMNS,
+                        s, null, null, null,
+                        DBOpenHelper.REMINDER_DATE + " ASC");
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
@@ -131,6 +142,10 @@ public class DataProvider extends ContentProvider {
                 id = database.insert(DBOpenHelper.TABLE_ASSESSMENTS,
                         null, contentValues);
                 return Uri.parse(ASSESSMENTS_PATH + "/" + id);
+            case REMINDERS:case REMINDERS_ID:
+                id = database.insert(DBOpenHelper.TABLE_REMINDERS,
+                        null, contentValues);
+                return Uri.parse(REMINDERS_PATH + "/" + id);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
@@ -149,6 +164,8 @@ public class DataProvider extends ContentProvider {
                 return database.delete(DBOpenHelper.TABLE_MENTORS, s, strings);
             case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.delete(DBOpenHelper.TABLE_ASSESSMENTS, s, strings);
+            case REMINDERS:case REMINDERS_ID:
+                return database.delete(DBOpenHelper.TABLE_REMINDERS, s, strings);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
@@ -167,6 +184,8 @@ public class DataProvider extends ContentProvider {
                 return database.update(DBOpenHelper.TABLE_MENTORS, contentValues, s, strings);
             case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.update(DBOpenHelper.TABLE_ASSESSMENTS, contentValues, s, strings);
+            case REMINDERS:case REMINDERS_ID:
+                return database.update(DBOpenHelper.TABLE_REMINDERS, contentValues, s, strings);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
