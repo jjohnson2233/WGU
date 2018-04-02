@@ -1,10 +1,14 @@
 package com.example.v_jarj.wgu;
 
+        import android.app.AlarmManager;
         import android.app.DatePickerDialog;
         import android.app.LoaderManager;
+        import android.app.PendingIntent;
         import android.content.ContentValues;
+        import android.content.Context;
         import android.content.CursorLoader;
         import android.content.Intent;
+        import android.content.IntentFilter;
         import android.content.Loader;
         import android.database.Cursor;
         import android.net.Uri;
@@ -29,6 +33,7 @@ package com.example.v_jarj.wgu;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
         import java.util.Date;
+        import java.util.GregorianCalendar;
         import java.util.Locale;
         import java.util.Objects;
 
@@ -159,7 +164,11 @@ public class CourseEditorActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishEditing();
+                try {
+                    finishEditing();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -226,7 +235,7 @@ public class CourseEditorActivity extends AppCompatActivity
         datePickerDialog.show();
     }
 
-    private void finishEditing() {
+    private void finishEditing() throws ParseException {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
         boolean newStartReminder = startReminder.isChecked();
@@ -306,7 +315,7 @@ public class CourseEditorActivity extends AppCompatActivity
     }
 
     private void createCourse(String courseTitle, String courseStart, String courseEnd,
-                              String courseStatus, long[] courseMentors, long[] courseAssessments) {
+                              String courseStatus, long[] courseMentors, long[] courseAssessments) throws ParseException {
         ContentValues courseValues = new ContentValues();
         ContentValues mentorValues = new ContentValues();
         ContentValues assessmentValues = new ContentValues();
@@ -317,11 +326,13 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         if (startReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
+            createReminder(startDate.getText().toString().trim());
         } else {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
         }
         if (endReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
+            createReminder(endDate.getText().toString().trim());
         } else {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
         }
@@ -343,6 +354,18 @@ public class CourseEditorActivity extends AppCompatActivity
             getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
         }
         setResult(RESULT_OK);
+    }
+
+    private void createReminder(String date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(format.parse(date));
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     @Override
