@@ -102,10 +102,6 @@ public class DataProvider extends ContentProvider {
                 return database.query(DBOpenHelper.TABLE_ASSESSMENTS, DBOpenHelper.ASSESSMENTS_ALL_COLUMNS,
                         s, null, null, null,
                         DBOpenHelper.ASSESSMENT_TITLE + " ASC");
-            case REMINDERS:case REMINDERS_ID:
-                return database.query(DBOpenHelper.TABLE_REMINDERS, DBOpenHelper.REMINDERS_ALL_COLUMNS,
-                        s, null, null, null,
-                        DBOpenHelper.REMINDER_DATE + " ASC");
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
@@ -142,10 +138,6 @@ public class DataProvider extends ContentProvider {
                 id = database.insert(DBOpenHelper.TABLE_ASSESSMENTS,
                         null, contentValues);
                 return Uri.parse(ASSESSMENTS_PATH + "/" + id);
-            case REMINDERS:case REMINDERS_ID:
-                id = database.insert(DBOpenHelper.TABLE_REMINDERS,
-                        null, contentValues);
-                return Uri.parse(REMINDERS_PATH + "/" + id);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
@@ -164,8 +156,6 @@ public class DataProvider extends ContentProvider {
                 return database.delete(DBOpenHelper.TABLE_MENTORS, s, strings);
             case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.delete(DBOpenHelper.TABLE_ASSESSMENTS, s, strings);
-            case REMINDERS:case REMINDERS_ID:
-                return database.delete(DBOpenHelper.TABLE_REMINDERS, s, strings);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }
@@ -184,8 +174,6 @@ public class DataProvider extends ContentProvider {
                 return database.update(DBOpenHelper.TABLE_MENTORS, contentValues, s, strings);
             case ASSESSMENTS:case ASSESSMENTS_ID:
                 return database.update(DBOpenHelper.TABLE_ASSESSMENTS, contentValues, s, strings);
-            case REMINDERS:case REMINDERS_ID:
-                return database.update(DBOpenHelper.TABLE_REMINDERS, contentValues, s, strings);
             default:
                 throw new IllegalArgumentException("Invalid Uri");
         }

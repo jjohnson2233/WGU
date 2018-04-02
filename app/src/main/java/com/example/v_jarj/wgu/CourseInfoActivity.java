@@ -25,7 +25,9 @@ public class CourseInfoActivity extends AppCompatActivity
     private static final int EDITOR_REQUEST_CODE = 1001;
     private TextView title;
     private TextView startDate;
+    private TextView startReminder;
     private TextView endDate;
+    private TextView endReminder;
     private TextView status;
     private CursorAdapter mentorCursorAdapter;
     private CursorAdapter assessmentCursorAdapter;
@@ -41,7 +43,9 @@ public class CourseInfoActivity extends AppCompatActivity
 
         title = findViewById(R.id.title);
         startDate = findViewById(R.id.dueDate);
+        startReminder = findViewById(R.id.startReminder);
         endDate = findViewById(R.id.endDate);
+        endReminder = findViewById(R.id.endReminder);
         status = findViewById(R.id.status);
 
         String[] mentorFrom = {DBOpenHelper.MENTOR_NAME};
@@ -177,11 +181,15 @@ public class CourseInfoActivity extends AppCompatActivity
         cursor.moveToFirst();
         String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
         String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
+        String oldStartReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START_REMINDER));
         String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
+        String oldEndReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END_REMINDER));
         String oldStatus = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_STATUS));
         title.setText(oldTitle);
         startDate.setText(oldStart);
+        startReminder.setText(oldStartReminder);
         endDate.setText(oldEnd);
+        endReminder.setText(oldEndReminder);
         status.setText(oldStatus);
         cursor.close();
     }

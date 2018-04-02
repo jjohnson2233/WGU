@@ -45,7 +45,9 @@ public class CourseEditorActivity extends AppCompatActivity
     private String courseFilter;
     private String oldTitle;
     private String oldStart;
+    private String oldStartReminder;
     private String oldEnd;
+    private String oldEndReminder;
     private String oldStatus;
     private Calendar calendar;
     private SimpleDateFormat format;
@@ -113,11 +115,29 @@ public class CourseEditorActivity extends AppCompatActivity
             cursor.moveToFirst();
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
             oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
+            oldStartReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START_REMINDER));
             oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END));
+            oldEndReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_END_REMINDER));
             oldStatus = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_STATUS));
             title.setText(oldTitle);
             startDate.setText(oldStart);
+            switch (oldStartReminder) {
+                case "On":
+                    startReminder.setChecked(true);
+                    break;
+                case "Off":
+                    startReminder.setChecked(false);
+                    break;
+            }
             endDate.setText(oldEnd);
+            switch (oldEndReminder) {
+                case "On":
+                    endReminder.setChecked(true);
+                    break;
+                case "Off":
+                    endReminder.setChecked(false);
+                    break;
+            }
             switch (oldStatus) {
                 case "Not Started":
                     statusSpinner.setSelection(0);
@@ -209,7 +229,9 @@ public class CourseEditorActivity extends AppCompatActivity
     private void finishEditing() {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
+        boolean newStartReminder = startReminder.isChecked();
         String newEnd = endDate.getText().toString().trim();
+        boolean newEndReminder = endReminder.isChecked();
         String newStatus = (String) statusSpinner.getSelectedItem();
         long[] mentors = mentorList.getCheckedItemIds();
         long[] assessments = assessmentList.getCheckedItemIds();
@@ -227,7 +249,8 @@ public class CourseEditorActivity extends AppCompatActivity
             case Intent.ACTION_EDIT:
                 //Check to see if anything was changed
                 if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd)
-                        && oldStatus.equals(newStatus) && mentors.length == 0 && assessments.length == 0) {
+                        && oldStatus.equals(newStatus) && mentors.length == 0 && assessments.length == 0
+                        && oldStartReminder.equals(newStartReminder) && oldEndReminder.equals(newEndReminder)) {
                     //If nothing was changed, don't do anything
                     setResult(RESULT_CANCELED);
                 } else {
@@ -249,6 +272,16 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_START, courseStart);
         courseValues.put(DBOpenHelper.COURSE_END, courseEnd);
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
+        if (startReminder.isChecked()) {
+            courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
+        } else {
+            courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
+        }
+        if (endReminder.isChecked()) {
+            courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
+        } else {
+            courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
+        }
         //Get the values for the mentors
         mentorValues.put(DBOpenHelper.COURSE_ID, courseID);
         assessmentValues.put(DBOpenHelper.COURSE_ID, courseID);
@@ -282,6 +315,16 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_START, courseStart);
         courseValues.put(DBOpenHelper.COURSE_END, courseEnd);
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
+        if (startReminder.isChecked()) {
+            courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
+        } else {
+            courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
+        }
+        if (endReminder.isChecked()) {
+            courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
+        } else {
+            courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
+        }
         //Create a new course with the values
         getContentResolver().insert(DataProvider.COURSES_URI, courseValues);
         courseFilter = DBOpenHelper.COURSE_TITLE + "=\"" + courseTitle + "\"";
@@ -298,18 +341,6 @@ public class CourseEditorActivity extends AppCompatActivity
         for (long id : courseAssessments) {
             assessmentFilter = DBOpenHelper.ID + "=" + id;
             getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
-        }
-        if (startReminder.isChecked()) {
-            ContentValues reminderValues = new ContentValues();
-            reminderValues.put(DBOpenHelper.REMINDER_DATE, startDate.getText().toString().trim());
-            reminderValues.put(DBOpenHelper.COURSE_ID, courseID);
-            getContentResolver().insert(DataProvider.REMINDERS_URI, reminderValues);
-        }
-        if (endReminder.isChecked()) {
-            ContentValues reminderValues = new ContentValues();
-            reminderValues.put(DBOpenHelper.REMINDER_DATE, endDate.getText().toString().trim());
-            reminderValues.put(DBOpenHelper.COURSE_ID, courseID);
-            getContentResolver().insert(DataProvider.REMINDERS_URI, reminderValues);
         }
         setResult(RESULT_OK);
     }
