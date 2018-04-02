@@ -161,4 +161,5 @@
     <string name="notes_title">Notes</string>
     <string name="title_activity_note_editor">NoteEditorActivity</string>
     <string name="note_editor_title">Edit Note</string>
+    <string name="menu_share_label">Share</string>
 </resources>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.v_jarj.wgu">
 
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -150,7 +150,11 @@
         </activity>
 
         <receiver
-            android:name=".NotificationReceiver"
+            android:name=".CourseNotificationReceiver"
+            android:enabled="true"
+            android:exported="true" />
+        <receiver
+            android:name=".AssessmentNotificationReceiver"
             android:enabled="true"
             android:exported="true"></receiver>
     </application>

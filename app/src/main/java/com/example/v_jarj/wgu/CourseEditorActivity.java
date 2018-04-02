@@ -8,7 +8,6 @@ package com.example.v_jarj.wgu;
         import android.content.Context;
         import android.content.CursorLoader;
         import android.content.Intent;
-        import android.content.IntentFilter;
         import android.content.Loader;
         import android.database.Cursor;
         import android.net.Uri;
@@ -32,8 +31,6 @@ package com.example.v_jarj.wgu;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
-        import java.util.Date;
-        import java.util.GregorianCalendar;
         import java.util.Locale;
         import java.util.Objects;
 
@@ -270,7 +267,7 @@ public class CourseEditorActivity extends AppCompatActivity
     }
 
     private void updateCourse(String courseTitle, String courseStart, String courseEnd,
-                              String courseStatus, long[] courseMentors, long[] courseAssessments) {
+                              String courseStatus, long[] courseMentors, long[] courseAssessments) throws ParseException {
         ContentValues courseValues = new ContentValues();
         ContentValues mentorValues = new ContentValues();
         ContentValues assessmentValues = new ContentValues();
@@ -283,11 +280,13 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         if (startReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
+            createReminder(startDate.getText().toString().trim());
         } else {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
         }
         if (endReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
+            createReminder(endDate.getText().toString().trim());
         } else {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
         }
@@ -361,7 +360,7 @@ public class CourseEditorActivity extends AppCompatActivity
         calendar.setTime(format.parse(date));
         calendar.set(Calendar.HOUR_OF_DAY, 9);
 
-        Intent intent = new Intent(this, NotificationReceiver.class);
+        Intent intent = new Intent(this, CourseNotificationReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);

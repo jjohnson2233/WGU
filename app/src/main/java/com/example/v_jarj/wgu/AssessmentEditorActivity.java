@@ -1,7 +1,10 @@
 package com.example.v_jarj.wgu;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -100,7 +103,11 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishEditing();
+                try {
+                    finishEditing();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -149,7 +156,19 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void finishEditing() {
+    private void createReminder(String date) throws ParseException {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(format.parse(date));
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+
+        Intent intent = new Intent(this, AssessmentNotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void finishEditing() throws ParseException {
         String newTitle = title.getText().toString().trim();
         String newDue = dueDate.getText().toString().trim();
         String newType = (String) spinner.getSelectedItem();
@@ -170,7 +189,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         finish();
     }
 
-    private void updateAssessment(String assessmentTitle, String assessmentStart, String assessmentType) {
+    private void updateAssessment(String assessmentTitle, String assessmentStart, String assessmentType) throws ParseException {
         final ContentValues assessmentValues = new ContentValues();
         //Get the values for the assessment
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TITLE, assessmentTitle);
@@ -178,6 +197,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TYPE, assessmentType);
         if (reminder.isChecked()) {
             assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "On");
+            createReminder(dueDate.getText().toString().trim());
         } else {
             assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "Off");
         }
@@ -186,7 +206,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         setResult(RESULT_OK);
     }
 
-    private void createAssessment(String assessmentTitle, String assessmentStart, String assessmentType) {
+    private void createAssessment(String assessmentTitle, String assessmentStart, String assessmentType) throws ParseException {
         final ContentValues assessmentValues = new ContentValues();
         //Get the values for the new assessment
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TITLE, assessmentTitle);
@@ -194,6 +214,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         assessmentValues.put(DBOpenHelper.ASSESSMENT_TYPE, assessmentType);
         if (reminder.isChecked()) {
             assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "On");
+            createReminder(dueDate.getText().toString().trim());
         } else {
             assessmentValues.put(DBOpenHelper.ASSESSMENT_ALERT, "Off");
         }
