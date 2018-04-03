@@ -6,32 +6,55 @@
     android:layout_height="match_parent"
     tools:context="com.example.v_jarj.wgu.MainActivity">
 
+    <ImageView
+        android:id="@+id/backgroundImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background" />
+
     <Button
-        android:id="@+id/openTermsListButton"
+        android:id="@+id/termsButton"
         android:layout_width="265dp"
         android:layout_height="79dp"
         android:onClick="openTermsList"
         android:text="@string/terms"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
+        app:layout_constraintBottom_toTopOf="@+id/coursesButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/coursesButton"
         android:layout_width="265dp"
         android:layout_height="79dp"
         android:onClick="openCoursesList"
         android:text="@string/courses"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/mentorsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openTermsListButton" />
+        app:layout_constraintTop_toBottomOf="@+id/termsButton" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/mentorsButton"
+        android:layout_width="265dp"
+        android:layout_height="79dp"
+        android:onClick="openMentorsList"
+        android:text="@string/mentors"
+        app:layout_constraintBottom_toTopOf="@+id/assessmentsButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/coursesButton" />
+
+    <Button
+        android:id="@+id/assessmentsButton"
         android:layout_width="265dp"
         android:layout_height="79dp"
         android:onClick="openAssessmentsList"
@@ -40,17 +63,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/mentorsButton" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="265dp"
-        android:layout_height="79dp"
-        android:onClick="openMentorsList"
-        android:text="@string/mentors"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
 </android.support.constraint.ConstraintLayout>

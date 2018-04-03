@@ -280,13 +280,13 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         if (startReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
-            createReminder(startDate.getText().toString().trim());
+            //createReminder(startDate.getText().toString().trim());
         } else {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
         }
         if (endReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
-            createReminder(endDate.getText().toString().trim());
+            //createReminder(endDate.getText().toString().trim());
         } else {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
         }
@@ -325,13 +325,13 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         if (startReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
-            createReminder(startDate.getText().toString().trim());
+            createReminder(startDate.getText().toString().trim(), true);
         } else {
             courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
         }
         if (endReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
-            createReminder(endDate.getText().toString().trim());
+            createReminder(endDate.getText().toString().trim(), false);
         } else {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
         }
@@ -355,13 +355,21 @@ public class CourseEditorActivity extends AppCompatActivity
         setResult(RESULT_OK);
     }
 
-    private void createReminder(String date) throws ParseException {
+    private void createReminder(String date, boolean starting) throws ParseException {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(format.parse(date));
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        //calendar.setTime(format.parse(date));
+        //calendar.set(Calendar.HOUR_OF_DAY, 9);
 
         Intent intent = new Intent(this, CourseNotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        String titleString = title.getText().toString().trim();
+        intent.putExtra("Title", titleString);
+        if (starting) {
+            intent.putExtra("Type", "starting");
+        } else {
+            intent.putExtra("Type", "ending");
+        }
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                0);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);

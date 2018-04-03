@@ -11,17 +11,18 @@ public class CourseNotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent intent1 = new Intent(context, CoursesListActivity.class);
-        intent1.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setClassName("com.example.v_jarj.wgu", CoursesListActivity.class.getName());
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent1,
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
-                .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
-                .setContentTitle("Course Reminder")
-                .setContentText("You have a course starting or ending today")
+                .setContentTitle("WGU Course Reminder")
+                .setContentText("You have a course " + intent.getStringExtra("Type") + " today: " + intent.getStringExtra("Title"))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         NotificationManagerCompat.from(context).notify(0, mBuilder.build());
