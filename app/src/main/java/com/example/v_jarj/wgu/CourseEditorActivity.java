@@ -9,6 +9,7 @@ package com.example.v_jarj.wgu;
         import android.content.CursorLoader;
         import android.content.Intent;
         import android.content.Loader;
+        import android.content.SharedPreferences;
         import android.database.Cursor;
         import android.net.Uri;
         import android.os.Bundle;
@@ -28,6 +29,8 @@ package com.example.v_jarj.wgu;
         import android.widget.SimpleCursorAdapter;
         import android.widget.Spinner;
 
+        import java.io.FileNotFoundException;
+        import java.io.FileOutputStream;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
@@ -246,7 +249,6 @@ public class CourseEditorActivity extends AppCompatActivity
             case Intent.ACTION_INSERT:
                 //Check to see if any of the fields are empty
                 if (newTitle.isEmpty() || newStart.isEmpty() || newEnd.isEmpty()) {
-                    //TODO create a pop up for when fields are empty
                     setResult(RESULT_CANCELED);
                 } else {
                     createCourse(newTitle, newStart, newEnd, newStatus, mentors, assessments);
@@ -279,16 +281,22 @@ public class CourseEditorActivity extends AppCompatActivity
         courseValues.put(DBOpenHelper.COURSE_END, courseEnd);
         courseValues.put(DBOpenHelper.COURSE_STATUS, courseStatus);
         if (startReminder.isChecked()) {
-            courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
-            //createReminder(startDate.getText().toString().trim());
+            if (oldStartReminder.equals("Off")) {
+                courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "On");
+                createReminder(startDate.getText().toString().trim(), true);
+            }
         } else {
-            courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
+            if (oldEndReminder.equals("On")) {
+                courseValues.put(DBOpenHelper.COURSE_START_REMINDER, "Off");
+                cancelReminder(true);
+            }
         }
         if (endReminder.isChecked()) {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "On");
-            //createReminder(endDate.getText().toString().trim());
+            createReminder(endDate.getText().toString().trim(), false);
         } else {
             courseValues.put(DBOpenHelper.COURSE_END_REMINDER, "Off");
+            cancelReminder(false);
         }
         //Get the values for the mentors
         mentorValues.put(DBOpenHelper.COURSE_ID, courseID);
@@ -346,19 +354,24 @@ public class CourseEditorActivity extends AppCompatActivity
         assessmentValues.put(DBOpenHelper.COURSE_ID, courseID);
         for (long id : courseMentors) {
             mentorFilter = DBOpenHelper.ID + "=" + id;
-            getContentResolver().update(DataProvider.MENTORS_URI, mentorValues, mentorFilter, null);
+            getContentResolver().update(DataProvider.MENTORS_URI, mentorValues, mentorFilter,
+                    null);
         }
         for (long id : courseAssessments) {
             assessmentFilter = DBOpenHelper.ID + "=" + id;
-            getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues, assessmentFilter, null);
+            getContentResolver().update(DataProvider.ASSESSMENTS_URI, assessmentValues,
+                    assessmentFilter, null);
         }
         setResult(RESULT_OK);
     }
 
     private void createReminder(String date, boolean starting) throws ParseException {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(format.parse(date));
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        /*calendar.setTime(format.parse(date));
+        calendar.set(Calendar.HOUR_OF_DAY, 9);*/
+        calendar.set(Calendar.HOUR_OF_DAY, 16);
+        calendar.set(Calendar.MINUTE, 34);
+        calendar.set(Calendar.SECOND, 5);
 
         Intent intent = new Intent(this, CourseNotificationReceiver.class);
         String titleString = title.getText().toString().trim();
@@ -368,11 +381,32 @@ public class CourseEditorActivity extends AppCompatActivity
         } else {
             intent.putExtra("Type", "ending");
         }
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
-                0);
+
+        PendingIntent pendingIntent;
+        if (starting) {
+            pendingIntent = PendingIntent.getBroadcast(this, 0,
+                    intent,0);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(this, 1,
+                    intent,0);
+        }
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelReminder (boolean starting) {
+        Intent intent = new Intent(this, CourseNotificationReceiver.class);
+        PendingIntent pendingIntent;
+        if (starting) {
+            pendingIntent = PendingIntent.getBroadcast(this, 0,
+                    intent, 0);
+        } else {
+            pendingIntent = PendingIntent.getBroadcast(this, 1,
+                    intent, 0);
+        }
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
     }
 
     @Override

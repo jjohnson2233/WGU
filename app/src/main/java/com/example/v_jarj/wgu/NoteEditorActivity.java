@@ -3,8 +3,10 @@ package com.example.v_jarj.wgu;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
@@ -21,7 +23,6 @@ public class NoteEditorActivity extends AppCompatActivity {
     private EditText content;
     private String noteFilter;
     private Uri courseUri;
-    private ShareActionProvider shareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,4 +130,5 @@ public class NoteEditorActivity extends AppCompatActivity {
         getContentResolver().insert(DataProvider.NOTES_URI, values);
         setResult(RESULT_OK);
     }
+
 }
