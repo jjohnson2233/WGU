@@ -357,8 +357,8 @@ public class CourseEditorActivity extends AppCompatActivity
 
     private void createReminder(String date, boolean starting) throws ParseException {
         Calendar calendar = Calendar.getInstance();
-        //calendar.setTime(format.parse(date));
-        //calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.setTime(format.parse(date));
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
 
         Intent intent = new Intent(this, CourseNotificationReceiver.class);
         String titleString = title.getText().toString().trim();

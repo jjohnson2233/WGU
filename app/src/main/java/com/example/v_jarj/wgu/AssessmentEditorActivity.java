@@ -162,6 +162,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         calendar.set(Calendar.HOUR_OF_DAY, 9);
 
         Intent intent = new Intent(this, AssessmentNotificationReceiver.class);
+        intent.putExtra("Title", title.getText().toString().trim());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
