@@ -3,22 +3,21 @@ package com.example.v_jarj.wgu;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.Objects;
+
 public class NoteEditorActivity extends AppCompatActivity {
 
-    public static final int RESULT_DELETED = 2;
+    private static final int RESULT_DELETED = 2;
     private String action;
     private EditText content;
     private String noteFilter;
@@ -30,7 +29,7 @@ public class NoteEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_note_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.note_editor_title);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.note_editor_title);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         content = findViewById(R.id.content);
@@ -49,7 +48,7 @@ public class NoteEditorActivity extends AppCompatActivity {
 
             Cursor cursor = getContentResolver().query(noteUri,
                     DBOpenHelper.NOTES_ALL_COLUMNS, noteFilter, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
             String oldContent = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_CONTENT));
             content.setText(oldContent);
             cursor.close();

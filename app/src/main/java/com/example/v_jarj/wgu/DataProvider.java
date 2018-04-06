@@ -27,7 +27,6 @@ public class DataProvider extends ContentProvider {
     public static final Uri NOTES_URI = Uri.parse("content://" + AUTHORITY + "/" + NOTES_PATH);
     public static final Uri MENTORS_URI = Uri.parse("content://" + AUTHORITY + "/" + MENTORS_PATH );
     public static final Uri ASSESSMENTS_URI = Uri.parse("content://" + AUTHORITY + "/" + ASSESSMENTS_PATH );
-    public static final Uri REMINDERS_URI = Uri.parse("content://" + AUTHORITY + "/" + REMINDERS_PATH);
 
     //Constants for identification
     private static final int TERMS = 1;
@@ -80,7 +79,7 @@ public class DataProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] strings, String s, String[] strings1, String s1) {
+    public Cursor query(@NonNull Uri uri, String[] strings, String s, String[] strings1, String s1) {
         switch (uriMatcher.match(uri)) {
             case TERMS:case TERMS_ID:
                 return database.query(DBOpenHelper.TABLE_TERMS, DBOpenHelper.TERMS_ALL_COLUMNS,

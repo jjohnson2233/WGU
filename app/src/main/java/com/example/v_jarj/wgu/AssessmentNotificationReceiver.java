@@ -17,7 +17,7 @@ public class AssessmentNotificationReceiver extends BroadcastReceiver {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+        @SuppressWarnings("deprecation") NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.ic_notifications_black_24dp)
                 .setContentTitle("WGU Assessment Reminder")
                 .setContentText("You have an assessment due today: " + intent.getStringExtra("Title"))

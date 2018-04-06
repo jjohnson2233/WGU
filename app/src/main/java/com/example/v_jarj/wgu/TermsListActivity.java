@@ -16,6 +16,8 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import java.util.Objects;
+
 public class TermsListActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<Cursor> {
     private CursorAdapter cursorAdapter;
@@ -26,7 +28,9 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_terms_list);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
+
         getSupportActionBar().setTitle("Terms");
 
         String[] from = {DBOpenHelper.TERM_TITLE};

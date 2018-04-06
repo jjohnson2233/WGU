@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 public class MentorInfoActivity extends AppCompatActivity {
     private static final int EDITOR_REQUEST_CODE = 1001;
     private TextView name;
@@ -22,7 +24,7 @@ public class MentorInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mentor_info);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.mentor_info_title);
 
         name = findViewById(R.id.name);
@@ -52,7 +54,7 @@ public class MentorInfoActivity extends AppCompatActivity {
         //Populate the Mentor info
         Cursor cursor = getContentResolver().query(uri,
                 DBOpenHelper.MENTORS_ALL_COLUMNS, mentorFilter, null, null);
-        cursor.moveToFirst();
+        Objects.requireNonNull(cursor).moveToFirst();
         String oldName = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_NAME));
         String oldEmail = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_EMAIL));
         String oldPhone = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_PHONE));

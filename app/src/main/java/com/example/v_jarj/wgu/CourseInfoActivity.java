@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +18,8 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+
+import java.util.Objects;
 
 public class CourseInfoActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -38,7 +39,7 @@ public class CourseInfoActivity extends AppCompatActivity
         setContentView(R.layout.activity_course_info);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.course_info);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(R.string.course_info);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         title = findViewById(R.id.title);
@@ -178,7 +179,7 @@ public class CourseInfoActivity extends AppCompatActivity
 
         Cursor cursor = getContentResolver().query(uri,
                 DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
-        cursor.moveToFirst();
+        Objects.requireNonNull(cursor).moveToFirst();
         String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
         String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
         String oldStartReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START_REMINDER));

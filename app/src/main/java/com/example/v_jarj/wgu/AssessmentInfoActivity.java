@@ -10,8 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 public class AssessmentInfoActivity extends AppCompatActivity {
-    private int EDITOR_REQUEST_CODE = 1001;
+    private final int EDITOR_REQUEST_CODE = 1001;
     private TextView title;
     private TextView dueDate;
     private TextView type;
@@ -23,7 +25,7 @@ public class AssessmentInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assessment_info);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Assessment Info");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Assessment Info");
 
         title = findViewById(R.id.title);
         dueDate = findViewById(R.id.dueDate);
@@ -64,7 +66,7 @@ public class AssessmentInfoActivity extends AppCompatActivity {
         //Populate the Assessment info
         Cursor cursor = getContentResolver().query(uri,
                 DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
-        cursor.moveToFirst();
+        Objects.requireNonNull(cursor).moveToFirst();
         String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TITLE));
         String oldDue = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_DUE));
         String oldType = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TYPE));

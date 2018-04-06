@@ -18,20 +18,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Switch;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class AssessmentEditorActivity extends AppCompatActivity {
 
-    public static final int RESULT_DELETED = 2;
+    private static final int RESULT_DELETED = 2;
     private String action;
     private EditText title;
     private EditText dueDate;
@@ -47,7 +47,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_assessment_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         title = findViewById(R.id.title);
@@ -73,7 +73,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
 
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.ASSESSMENTS_ALL_COLUMNS, assessmentFilter, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
             String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TITLE));
             String oldDue = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_DUE));
             String oldType = cursor.getString(cursor.getColumnIndex(DBOpenHelper.ASSESSMENT_TYPE));
@@ -140,7 +140,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
             finish();
     }
 
-    public void openDueDatePicker(View view) throws ParseException {
+    public void openDueDatePicker(View view) {
         dueDate = findViewById(R.id.dueDate);
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -166,7 +166,7 @@ public class AssessmentEditorActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Objects.requireNonNull(alarmManager).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     private void finishEditing() throws ParseException {

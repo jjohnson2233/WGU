@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 public class TermInfoActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int EDITOR_REQUEST_CODE = 1001;
@@ -70,7 +72,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             }
 
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
     private void populateFields() {
@@ -81,7 +83,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         //Populate the Term info
         Cursor cursor = getContentResolver().query(uri,
                 DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
-        cursor.moveToFirst();
+        Objects.requireNonNull(cursor).moveToFirst();
         String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_TITLE));
         String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_START));
         String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_END));

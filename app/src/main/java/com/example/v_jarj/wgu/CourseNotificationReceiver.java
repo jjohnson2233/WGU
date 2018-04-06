@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+@SuppressWarnings("deprecation")
 public class CourseNotificationReceiver extends BroadcastReceiver {
 
     @Override

@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import java.util.Objects;
+
 public class MentorEditorActivity extends AppCompatActivity {
 
     public static final int RESULT_DELETED = 2;
@@ -29,7 +31,7 @@ public class MentorEditorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mentor_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         name = findViewById(R.id.name);
@@ -50,7 +52,7 @@ public class MentorEditorActivity extends AppCompatActivity {
 
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.MENTORS_ALL_COLUMNS, mentorFilter, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
             String oldName = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_NAME));
             String oldEmail = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_EMAIL));
             String oldPhone = cursor.getString(cursor.getColumnIndex(DBOpenHelper.MENTOR_PHONE));

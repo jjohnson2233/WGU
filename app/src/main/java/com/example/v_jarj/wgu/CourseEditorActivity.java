@@ -9,7 +9,6 @@ package com.example.v_jarj.wgu;
         import android.content.CursorLoader;
         import android.content.Intent;
         import android.content.Loader;
-        import android.content.SharedPreferences;
         import android.database.Cursor;
         import android.net.Uri;
         import android.os.Bundle;
@@ -29,14 +28,13 @@ package com.example.v_jarj.wgu;
         import android.widget.SimpleCursorAdapter;
         import android.widget.Spinner;
 
-        import java.io.FileNotFoundException;
-        import java.io.FileOutputStream;
         import java.text.ParseException;
         import java.text.SimpleDateFormat;
         import java.util.Calendar;
         import java.util.Locale;
         import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class CourseEditorActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int RESULT_DELETED = 2;
@@ -59,10 +57,10 @@ public class CourseEditorActivity extends AppCompatActivity
     private CursorAdapter mentorCursorAdapter;
     private CursorAdapter assessmentCursorAdapter;
     private Uri uri;
-    ListView mentorList;
-    ListView assessmentList;
-    String mentorFilter;
-    String assessmentFilter;
+    private ListView mentorList;
+    private ListView assessmentList;
+    private String mentorFilter;
+    private String assessmentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +68,7 @@ public class CourseEditorActivity extends AppCompatActivity
         setContentView(R.layout.activity_course_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         title = findViewById(R.id.title);
@@ -117,7 +115,7 @@ public class CourseEditorActivity extends AppCompatActivity
 
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_TITLE));
             oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START));
             oldStartReminder = cursor.getString(cursor.getColumnIndex(DBOpenHelper.COURSE_START_REMINDER));
@@ -238,9 +236,7 @@ public class CourseEditorActivity extends AppCompatActivity
     private void finishEditing() throws ParseException {
         String newTitle = title.getText().toString().trim();
         String newStart = startDate.getText().toString().trim();
-        boolean newStartReminder = startReminder.isChecked();
         String newEnd = endDate.getText().toString().trim();
-        boolean newEndReminder = endReminder.isChecked();
         String newStatus = (String) statusSpinner.getSelectedItem();
         long[] mentors = mentorList.getCheckedItemIds();
         long[] assessments = assessmentList.getCheckedItemIds();
@@ -257,8 +253,7 @@ public class CourseEditorActivity extends AppCompatActivity
             case Intent.ACTION_EDIT:
                 //Check to see if anything was changed
                 if (oldTitle.equals(newTitle) && oldStart.equals(newStart) && oldEnd.equals(newEnd)
-                        && oldStatus.equals(newStatus) && mentors.length == 0 && assessments.length == 0
-                        && oldStartReminder.equals(newStartReminder) && oldEndReminder.equals(newEndReminder)) {
+                        && oldStatus.equals(newStatus) && mentors.length == 0 && assessments.length == 0) {
                     //If nothing was changed, don't do anything
                     setResult(RESULT_CANCELED);
                 } else {
@@ -348,7 +343,7 @@ public class CourseEditorActivity extends AppCompatActivity
         courseFilter = DBOpenHelper.COURSE_TITLE + "=\"" + courseTitle + "\"";
         Cursor cursor = getContentResolver().query(DataProvider.COURSES_URI,
                 DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
-        cursor.moveToFirst();
+        Objects.requireNonNull(cursor).moveToFirst();
         int courseID = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
         mentorValues.put(DBOpenHelper.COURSE_ID, courseID);
         assessmentValues.put(DBOpenHelper.COURSE_ID, courseID);
@@ -392,7 +387,7 @@ public class CourseEditorActivity extends AppCompatActivity
         }
 
         AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Objects.requireNonNull(alarmManager).set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
     }
 
     private void cancelReminder (boolean starting) {
@@ -406,7 +401,7 @@ public class CourseEditorActivity extends AppCompatActivity
                     intent, 0);
         }
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
+        Objects.requireNonNull(alarmManager).cancel(pendingIntent);
     }
 
     @Override

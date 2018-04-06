@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -154,11 +155,15 @@
         <receiver
             android:name=".CourseNotificationReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission=""
+            tools:ignore="ExportedReceiver" />
         <receiver
             android:name=".AssessmentNotificationReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission=""
+            tools:ignore="ExportedReceiver" />
     </application>
 
 </manifest>

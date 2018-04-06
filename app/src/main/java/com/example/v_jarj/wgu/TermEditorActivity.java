@@ -24,11 +24,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
+@SuppressWarnings("unused")
 public class TermEditorActivity extends AppCompatActivity
 implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -42,7 +43,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     private Calendar calendar;
     private CursorAdapter cursorAdapter;
     private Uri uri;
-    ListView list;
+    private ListView list;
     private final SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
     @Override
@@ -51,7 +52,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         setContentView(R.layout.activity_term_editor);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         title = findViewById(R.id.title);
@@ -84,7 +85,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
 
             Cursor cursor = getContentResolver().query(uri,
                     DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
             String oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_TITLE));
             String oldStart = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_START));
             String oldEnd = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TERM_END));
@@ -96,7 +97,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
             courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
             cursor = getContentResolver().query(DataProvider.COURSES_URI,
                     DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -138,12 +139,12 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         cursorAdapter.swapCursor(data);
-        if (action == Intent.ACTION_EDIT) {
+        if (Objects.equals(action, Intent.ACTION_EDIT)) {
             courseFilter = DBOpenHelper.TERM_ID + "=" + uri.getLastPathSegment();
             Cursor checkedCursor = getContentResolver().query(DataProvider.COURSES_URI,
                     DBOpenHelper.COURSES_ALL_COLUMNS, courseFilter, null, null);
             Cursor uncheckedCursor = cursorAdapter.getCursor();
-            checkedCursor.moveToFirst();
+            Objects.requireNonNull(checkedCursor).moveToFirst();
             uncheckedCursor.moveToFirst();
             while (!checkedCursor.isAfterLast()) {
                 int i = 0;
@@ -158,6 +159,8 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
                 uncheckedCursor.moveToFirst();
                 checkedCursor.moveToNext();
             }
+            checkedCursor.close();
+            uncheckedCursor.close();
         }
     }
 
@@ -196,7 +199,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         }
     }
 
-    public void openStartDatePicker(View view) throws ParseException {
+    public void openStartDatePicker(View view) {
         startDate = findViewById(R.id.dueDate);
         calendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
@@ -283,7 +286,7 @@ implements LoaderManager.LoaderCallbacks<Cursor> {
         termFilter = DBOpenHelper.TERM_TITLE + "=\"" + termTitle + "\"";
         Cursor cursor = getContentResolver().query(DataProvider.TERMS_URI,
                 DBOpenHelper.TERMS_ALL_COLUMNS, termFilter, null, null);
-        cursor.moveToFirst();
+        Objects.requireNonNull(cursor).moveToFirst();
         int termID = cursor.getInt(cursor.getColumnIndex(DBOpenHelper.ID));
         courseValues.put(DBOpenHelper.TERM_ID, termID);
         for (long id : termCourses) {
