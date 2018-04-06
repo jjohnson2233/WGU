@@ -163,4 +163,6 @@
     <string name="note_editor_title">Edit Note</string>
     <string name="menu_share_label">Share</string>
     <string name="camera_button_test">Take a Picture</string>
+    <string name="count_label">Count:</string>
+    <string name="count_example">#</string>
 </resources>
